@@ -4,5 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yosang.language.dao.WordDao">
 
-
+    <select id="randomStart" resultType="com.yosang.language.pojo.Word">
+        select * from `language`.word ORDER BY (WORD_RIGHT_NUM+WORD_MISTAKE_NUM) ASC,WORD_MISTAKE_NUM DESC LIMIT 1
+    </select>
 </mapper>

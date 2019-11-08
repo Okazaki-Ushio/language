@@ -1,6 +1,7 @@
 package com.yosang.language.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.yosang.language.config.LanguageConfig;
 import com.yosang.language.dao.ChineseWordDao;
 import com.yosang.language.dao.WordDao;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @AUTHOR YoSang
@@ -64,8 +66,8 @@ public class WordServiceImpl implements WordService {
 
     @Override
     public JSONObject getWordAndRelation(Integer wordId) {
-        List<Word> words = LanguageConfig.getWordAndRelation(wordId,wordDao);
-        return JsonUtils.success(words);
+        Map<String, Object> map = LanguageConfig.getWordAndRelation(wordId, wordDao);
+        return JsonUtils.success(map);
     }
 
     @Override
@@ -75,6 +77,31 @@ public class WordServiceImpl implements WordService {
         }
         List<Word> words = LanguageConfig.getWordsBySingleWord(singleWord, chineseWordDao, wordDao);
         return JsonUtils.success(words);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public JSONObject checkAndUpdateWordNum(List<Word> words) {
+        try {
+            for (Word word : words) {
+                word.setWordUpdateTime(TimeUtils.now());
+                int insert = wordDao.insert(word);
+                if(insert!=1){
+                    throw new Exception("fail to udpate word num");
+                }
+            }
+            return JsonUtils.success("");
+        } catch (Exception e) {
+            e.printStackTrace();
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return JsonUtils.fail(1001, "更新单词统计失败");
+        }
+    }
+
+    @Override
+    public JSONObject randomStart() {
+        Word word=wordDao.randomStart();
+        return getWordAndRelation(word.getWordId());
     }
 
 

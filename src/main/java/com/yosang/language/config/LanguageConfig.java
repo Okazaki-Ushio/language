@@ -10,10 +10,7 @@ import com.yosang.language.pojo.Word;
 import com.yosang.language.utils.TimeUtils;
 
 import static com.yosang.language.enumunation.WORDTYPE.*;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 
 /**
@@ -157,7 +154,7 @@ public class LanguageConfig {
         }
     }
 
-    public static List<Word> getWordAndRelation(Integer wordId,WordDao wordDao) {
+    public static Map<String,Object> getWordAndRelation(Integer wordId,WordDao wordDao) {
         List<Word> result=new ArrayList<>();
         Word word = wordDao.selectById(wordId);
         String chineseIds = word.getWordChineseIds();
@@ -165,11 +162,14 @@ public class LanguageConfig {
             String[] ids = chineseIds.substring(1, chineseIds.length() - 2).split("|");
             for (String id : ids) {
                 QueryWrapper<Word> con=new QueryWrapper<>();
-                con.like("WORD_CHINESE_IDS","|"+id+"|");
+                con.like("WORD_CHINESE_IDS","|"+id+"|").notIn("WORD_ID",wordId);
                 List<Word> words = wordDao.selectList(con);
                 result.addAll(words);
             }
         }
-        return result;
+        Map<String,Object> map=new HashMap<>();
+        map.put("list",result);
+        map.put("target",word);
+        return map;
     }
 }
