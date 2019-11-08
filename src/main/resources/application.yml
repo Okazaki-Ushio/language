@@ -1,0 +1,30 @@
+
+server:
+  port: 8080
+
+spring:
+  application:
+    name: language
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/language?serverTimezone=CTT&useUnicode=true&characterEncoding=utf-8
+    username: root
+    password: 123456
+    dbcp2:
+      min-idle: 5 #数据库连接池最小维持连接数
+      initial-size: 5 #初始化连接数
+      max-total: 5 #最大连接数
+      max-wait-millis: 200 #等待连接获取的最大超时时间
+    type: com.alibaba.druid.pool.DruidDataSource
+mybatis-plus:
+  configuration:
+    #开启驼峰命名转换
+    mapUnderscoreToCamelCase: true
+  mapper-locations: classpath:com/tzle1/weige/dao/*Dao.xml
+
+logging:
+  level:
+    com.yosang.language.dao: debug
+    com.yosang.language.controller: warn
+    #SpringBoot去掉CONDITIONS EVALUATION REPORT及自动配置内容的查看
+    org.springframework.boot.autoconfigure: ERROR
