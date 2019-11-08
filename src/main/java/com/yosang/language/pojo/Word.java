@@ -24,4 +24,5 @@ public class Word {
     private String wordCreateTime;
     private String wordChineseIds; // |52|45|75|
     private String wordUpdateTime;
+    private String wordMeaning;
 }

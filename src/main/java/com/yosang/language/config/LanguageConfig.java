@@ -28,19 +28,19 @@ public class LanguageConfig {
 
             "が", "ぎ", "ぐ", "げ", "ご", "ざ", "じ", "ず", "ぜ", "ぞ",
             "だ", "ぢ", "づ", "で", "ど", "ば", "び", "ぶ", "べ", "ぼ",
-            "ぱ", "ぴ", "ぷ", "ぺ"
+            "ぱ", "ぴ", "ぷ", "ぺ","ん","っ","ゃ","ょ","ッ"
     };
 
     private static String[] katakana = {
             "ア", "イ", "ウ", "エ", "オ", "カ", "キ", "ク", "ケ", "コ",
             "サ", "シ", "ス", "セ", "ソ", "タ", "チ", "ツ", "テ", "ト",
             "ナ", "ニ", "ヌ", "ネ", "ノ", "ハ", "ヒ", "フ", "ヘ", "ホ",
-            "マ", "ミ", "ム", "メ", "モ", "ヤ", "イ", "ユ", "エ", "ヨ",
+            "マ", "ミ", "ム", "メ", "モ", "ヤ", "イ", "ュ", "エ", "ョ",
             "ラ", "リ", "ル", "レ", "ロ", "ワ", "イ", "ウ", "エ", "ヲ",
 
             "ガ", "ギ", "グ", "ゲ", "ゴ", "ザ", "ジ", "ズ", "ゼ", "ゾ",
             "ダ", "ヂ", "ヅ", "デ", "ド", "バ", "ビ", "ブ", "ベ", "ボ",
-            "パ", "ピ", "プ", "ペ",
+            "パ", "ピ", "プ", "ペ","ァ","ー","ン","ポ","ェ","ィ"
     };
 
     private static List<String> hiraganaList = Arrays.asList(hiragana);
@@ -58,9 +58,9 @@ public class LanguageConfig {
     public static boolean isWago(String word) {
         for (int i = 0; i < word.length(); i++) {
             if (!hiraganaList.contains(word.substring(i, i + 1)))
-                return true;
+                return false;
         }
-        return false;
+        return true;
     }
 
     public static boolean containChinese(String word) {
@@ -71,16 +71,16 @@ public class LanguageConfig {
         return false;
     }
 
-    public static WORDTYPE getWordType(String singleWord) {
-        if (containLoanword(singleWord)) {
-            if (containChinese(singleWord)) {
+    public static WORDTYPE getWordType(String word) {
+        if (containLoanword(word)) {
+            if (containChinese(word)) {
                 return LOANWORD_CHINESE;
             } else {
                 return LOANWORD;
             }
-        } else if (containChinese(singleWord)) {
+        } else if (containChinese(word)) {
             return CHINESE;
-        } else if (isWago(singleWord)) {
+        } else if (isWago(word)) {
             return WAGO;
         } else {
             return EXCEPTION;

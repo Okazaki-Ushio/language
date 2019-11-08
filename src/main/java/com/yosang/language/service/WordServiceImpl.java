@@ -48,7 +48,6 @@ public class WordServiceImpl implements WordService {
                     break;
                 case CHINESE:
                 case LOANWORD_CHINESE:
-                    word.setWordPronunciation(wordOriginal);
                     word.setWordChineseIds(LanguageConfig.getChineseIds(wordOriginal,chineseWordDao));
                     insert = wordDao.insert(word);
                     break;

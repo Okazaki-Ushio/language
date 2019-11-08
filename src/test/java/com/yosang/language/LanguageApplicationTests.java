@@ -1,6 +1,13 @@
 package com.yosang.language;
 
+import com.yosang.language.config.LanguageConfig;
+import com.yosang.language.dao.ChineseWordDao;
 import com.yosang.language.dao.WordDao;
+import com.yosang.language.enumunation.WORDTYPE;
+import com.yosang.language.pojo.ChineseWord;
+import com.yosang.language.pojo.Word;
+import com.yosang.language.service.WordService;
+import com.yosang.language.utils.TimeUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +24,57 @@ class LanguageApplicationTests {
 
     @Autowired
     private WordDao wordDao;
+    @Autowired
+    private ChineseWordDao chineseWordDao;
+    @Autowired
+    private WordService wordService;
 
     @Test
     void contextLoads(){
 
+    }
+
+    @Test
+    public void readTxt() throws IOException {
+        wordDao.delete(null);
+        chineseWordDao.delete(null);
+        File file = new File("C:\\Users\\Administrator\\Desktop\\equb.txt");
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+        String line;
+        List<String> tempList = new ArrayList<>();
+        while ((line = reader.readLine()) != null) {
+            tempList.add(line);
+        }
+        String now = TimeUtils.now();
+        for (String temp : tempList) {
+            int bEnd=temp.indexOf("）");
+            int mEnd=temp.indexOf("〕");
+            int end=bEnd>mEnd?bEnd:mEnd;
+            String meaning = temp.substring(end+1);
+
+            if(temp.contains("（")){
+                int start = temp.indexOf("（");
+                String chineseWord = temp.substring(start+1, temp.indexOf("）")).trim();
+                int tempIndex = temp.indexOf("［");
+                start=tempIndex<start&&tempIndex!=-1?tempIndex:start;
+                String pronunciation = temp.substring(0, start);
+                Word word=new Word();
+                word.setWordPronunciation(pronunciation).setWordType(WORDTYPE.CHINESE.getValue())
+                        .setWordCreateTime(now).setWordRightNum(0).setWordMistakeNum(0)
+                        .setWordOriginal(chineseWord).setWordMeaning(meaning);
+                wordService.addWord(word);
+            }else{
+                int start = temp.indexOf("［");
+                int tempStart = temp.indexOf("〔");
+                start=(start<tempStart&&start!=-1)?start:tempStart;
+                String notChineseWord = temp.substring(0, start).trim();
+                Word word=new Word();
+                word.setWordPronunciation(notChineseWord).setWordType(LanguageConfig.getWordType(notChineseWord).getValue())
+                        .setWordCreateTime(now).setWordRightNum(0).setWordMistakeNum(0)
+                        .setWordOriginal(notChineseWord).setWordMeaning(meaning);
+                wordService.addWord(word);
+            }
+        }
     }
 
     @Test
