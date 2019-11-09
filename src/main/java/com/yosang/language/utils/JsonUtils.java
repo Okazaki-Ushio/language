@@ -3,6 +3,8 @@ package com.yosang.language.utils;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
+import java.util.List;
+
 public class JsonUtils {
 
     public static JSONObject success(Object data){
@@ -18,6 +20,13 @@ public class JsonUtils {
         map.put("errcode",code);
         map.put("errmsg",msg);
         map.put("data","");
+        return map;
+    }
+
+    public static JSONObject successList(List<?> list){
+        JSONObject map = new JSONObject();
+        map.put("data",list);
+        map.put("size",list.size());
         return map;
     }
 

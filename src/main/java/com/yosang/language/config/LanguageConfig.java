@@ -28,7 +28,7 @@ public class LanguageConfig {
 
             "が", "ぎ", "ぐ", "げ", "ご", "ざ", "じ", "ず", "ぜ", "ぞ",
             "だ", "ぢ", "づ", "で", "ど", "ば", "び", "ぶ", "べ", "ぼ",
-            "ぱ", "ぴ", "ぷ", "ぺ","ん","っ","ゃ","ょ","ッ"
+            "ぱ", "ぴ", "ぷ", "ぺ","ん","っ","ゃ","ょ","ッ","～"
     };
 
     private static String[] katakana = {
@@ -136,7 +136,7 @@ public class LanguageConfig {
         QueryWrapper<Word> con = new QueryWrapper<>();
         con.eq("WORD_ORIGINAL", wordOriginal);
         if (wordDao.selectOne(con) != null) {
-            throw new LanguageException("duplicate word in database");
+            throw new LanguageException("duplicate "+wordOriginal+" in database");
         }
     }
 
@@ -159,7 +159,7 @@ public class LanguageConfig {
         Word word = wordDao.selectById(wordId);
         String chineseIds = word.getWordChineseIds();
         if(chineseIds !=null){
-            String[] ids = chineseIds.substring(1, chineseIds.length() - 2).split("|");
+            String[] ids = chineseIds.substring(1, chineseIds.length() - 2).split("\\|");
             for (String id : ids) {
                 QueryWrapper<Word> con=new QueryWrapper<>();
                 con.like("WORD_CHINESE_IDS","|"+id+"|").notIn("WORD_ID",wordId);
@@ -168,6 +168,7 @@ public class LanguageConfig {
             }
         }
         Map<String,Object> map=new HashMap<>();
+        map.put("size",result.size());
         map.put("list",result);
         map.put("target",word);
         return map;

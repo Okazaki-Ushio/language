@@ -36,7 +36,7 @@ public class WordServiceImpl implements WordService {
         try {
             int insert=0;
             String wordOriginal = word.getWordOriginal();
-            LanguageConfig.filterDuplicateWord(wordOriginal,wordDao);
+            //LanguageConfig.filterDuplicateWord(wordOriginal,wordDao);
             WORDTYPE wordType = LanguageConfig.getWordType(wordOriginal);
             word.setWordMistakeNum(0).setWordRightNum(0).setWordCreateTime(TimeUtils.now())
                     .setWordType(wordType.getValue());
@@ -53,7 +53,7 @@ public class WordServiceImpl implements WordService {
                     break;
             }
             if(insert!=1){
-                throw new LanguageException("fail to insert word to the database");
+                throw new LanguageException("fail to insert "+word.getWordOriginal()+" to the database");
             }
             return JsonUtils.success("");
         } catch (Exception e) {
@@ -75,7 +75,7 @@ public class WordServiceImpl implements WordService {
             return JsonUtils.fail(1001,"不是单个汉字");
         }
         List<Word> words = LanguageConfig.getWordsBySingleWord(singleWord, chineseWordDao, wordDao);
-        return JsonUtils.success(words);
+        return JsonUtils.successList(words);
     }
 
     @Override
