@@ -1,7 +1,6 @@
 package com.yosang.language.service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.yosang.language.config.LanguageConfig;
 import com.yosang.language.dao.ChineseWordDao;
 import com.yosang.language.dao.WordDao;
@@ -84,8 +83,11 @@ public class WordServiceImpl implements WordService {
         try {
             for (Word word : words) {
                 word.setWordUpdateTime(TimeUtils.now());
-                int insert = wordDao.insert(word);
-                if(insert!=1){
+                Word selectWord = wordDao.selectById(word.getWordId());
+                selectWord.setWordMistakeNum(selectWord.getWordMistakeNum()+word.getWordMistakeNum());
+                selectWord.setWordRightNum(selectWord.getWordRightNum()+selectWord.getWordRightNum());
+                int update = wordDao.updateById(word);
+                if(update!=1){
                     throw new Exception("fail to udpate word num");
                 }
             }
@@ -101,6 +103,27 @@ public class WordServiceImpl implements WordService {
     public JSONObject randomStart() {
         Word word=wordDao.randomStart();
         return getWordAndRelation(word.getWordId());
+    }
+
+    @Override
+    public JSONObject deleteWordByWordId(Integer wordId) {
+        int delete = wordDao.deleteById(wordId);
+        if(delete==1){
+            return JsonUtils.success("");
+        }else {
+            return JsonUtils.fail(1001,"fail to delete word");
+        }
+    }
+
+    @Override
+    public JSONObject updateWordByWordId(Word word) {
+        word.setWordUpdateTime(TimeUtils.now());
+        int update = wordDao.updateById(word);
+        if(update==1){
+            return JsonUtils.success("");
+        }else {
+            return JsonUtils.fail(1001,"fail to update word");
+        }
     }
 
 

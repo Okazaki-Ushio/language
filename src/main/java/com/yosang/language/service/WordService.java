@@ -20,4 +20,8 @@ public interface WordService {
     JSONObject checkAndUpdateWordNum(List<Word> words);
 
     JSONObject randomStart();
+
+    JSONObject deleteWordByWordId(Integer wordId);
+
+    JSONObject updateWordByWordId(Word word);
 }

@@ -27,6 +27,7 @@ public class JsonUtils {
         JSONObject map = new JSONObject();
         map.put("data",list);
         map.put("size",list.size());
+        map.put("errcode",0);
         return map;
     }
 

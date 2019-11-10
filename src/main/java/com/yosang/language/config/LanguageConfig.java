@@ -147,8 +147,8 @@ public class LanguageConfig {
         if (null != chineseWord) {
             QueryWrapper<Word> con1 = new QueryWrapper<>();
             con1.like("WORD_CHINESE_IDS", "|" + chineseWord.getChineseWordId() + "|");
-            return wordDao.selectList(con1);
-
+            List<Word> words = wordDao.selectList(con1);
+            return words;
         } else {
             return null;
         }
@@ -159,10 +159,10 @@ public class LanguageConfig {
         Word word = wordDao.selectById(wordId);
         String chineseIds = word.getWordChineseIds();
         if(chineseIds !=null){
-            String[] ids = chineseIds.substring(1, chineseIds.length() - 2).split("\\|");
+            String[] ids = chineseIds.substring(1, chineseIds.length() - 1).split("\\|");
             for (String id : ids) {
                 QueryWrapper<Word> con=new QueryWrapper<>();
-                con.like("WORD_CHINESE_IDS","|"+id+"|").notIn("WORD_ID",wordId);
+                con.like("WORD_CHINESE_IDS","|"+id+"|")/*.notIn("WORD_ID",wordId)*/;
                 List<Word> words = wordDao.selectList(con);
                 result.addAll(words);
             }

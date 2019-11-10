@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+	<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/font-awesome.min.css">
+	<link rel="stylesheet" href="css/main.css">
+	<!-- <link rel="stylesheet" href="bootstrap/css/fresh-bootstrap-table.css"/> -->
+	<style>
+	.tree li {
+        list-style-type: none;
+		cursor:pointer;
+	}
+	.table>tbody>tr>td{
+    border:0px;
+    }
+	/* table tbody tr:nth-child(odd){background:#F4F4F4;}
+	table tbody td:nth-child(even){color:#C00;} */
+	</style>
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">          
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li style="padding-top:8px;">
+			</li>            
+          </ul>          
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+			<div class="tree">
+				<ul style="padding-left:0px;" class="list-group">
+					<li class="list-group-item tree-closed" >
+						<a href="#"><i class="glyphicon glyphicon-dashboard"></i> 控制面板</a> 
+					</li>
+					<li class="list-group-item">
+						<span><i class="glyphicon glyphicon glyphicon-tasks"></i> 单词管理 <span class="badge" style="float:right">2</span></span> 
+						<ul style="margin-top:10px;">
+							<li style="height:30px;">
+								<a href="word.html" style="color:red;"><i class="glyphicon glyphicon-user"></i> 单词列表</a>
+							</li>
+							<li style="height:30px;">
+								<a href="#"><i class="glyphicon glyphicon-king"></i> 统计查询</a> 
+							</li>							
+						</ul>
+					</li>
+					<li class="list-group-item tree-closed">
+						<span><i class="glyphicon glyphicon-ok"></i> 先空这 <span class="badge" style="float:right">0</span></span> 
+						<ul style="margin-top:10px;display:none;">
+							<li style="height:30px;">
+								<a href="auth_cert.html"><i class="glyphicon glyphicon-check"></i> XXXX</a> 
+							</li>
+							<li style="height:30px;">
+								<a href="auth_adv.html"><i class="glyphicon glyphicon-check"></i> XXXX</a> 
+							</li>
+							<li style="height:30px;">
+								<a href="auth_project.html"><i class="glyphicon glyphicon-check"></i> XXXX</a> 
+							</li>
+						</ul>
+					</li>					
+					<li class="list-group-item tree-closed" >
+						<a href="param.html"><i class="glyphicon glyphicon-list-alt"></i> 先空这</a> 
+					</li>
+				</ul>
+			</div>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+			<div class="panel panel-default">
+			  <div class="panel-heading">
+				<h3 class="panel-title"><i class="glyphicon glyphicon-th"></i> 单词列表</h3>
+			  </div>
+			  <div class="panel-body">
+<form class="form-inline" role="form" style="float:left;">
+  <div class="form-group has-feedback">
+    <div class="input-group">
+      <div class="input-group-addon">查询条件</div>
+      <input id="singleWord" class="form-control has-success" type="text" placeholder="请输入查询条件">
+    </div>
+  </div>
+  <button id="singleWordSearch" type="button" class="btn btn-warning"><i class="glyphicon glyphicon-search"></i> 查询</button>
+</form>
+<button type="button" class="btn btn-primary" style="float:right;margin-left:10px;" onclick="checkAndUpdateWordNum()">提交</button>
+<button type="button" class="btn btn-info" style="float:right;margin-left:50px;" onclick="showWords()">显示单词</button>
+<br>
+ <hr style="clear:both;">
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr >
+                  <th class="col-md-1">编号</th>				  
+                  <th class="col-md-2">中文</th>
+                  <th class="col-md-2">填空框</th>
+                  <th class="col-md-2">答案</th>
+				  <th class="col-md-2">发音</th>
+                  <th width="col-md-3">操作</th>
+                </tr>
+              </thead>
+              <tbody id="wordList">                
+				
+              </tbody>			  
+            </table>
+			
+			<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+			  <div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+				  ...
+				</div>
+			  </div>
+			</div>
+			
+          </div>
+			  </div>
+			</div>
+        </div>
+      </div>
+    </div>
+	
+
+    <script src="jquery/jquery-2.1.1.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+	<script src="script/docs.min.js"></script>
+	<!-- <script src="bootstrap/js/bootstrap-table.js"></script> -->
+
+	
+        <script type="text/javascript">			
+            $(function () {
+			    $(".list-group-item").click(function(){
+				    if ( $(this).find("ul") ) {
+						$(this).toggleClass("tree-closed");
+						if ( $(this).hasClass("tree-closed") ) {
+							$("ul", this).hide("fast");
+						} else {
+							$("ul", this).show("fast");
+						}
+					}
+				});
+            });
+			randomStart();
+			$("#singleWordSearch").click(function(){
+				var searchWord=$("#singleWord").val();
+				getWordBySingleWord(searchWord);
+			});           	
+			function getWordBySingleWord(singleWord){
+				$.ajax({
+					type : "GET",
+					url  : "getWordBySingleWord",
+					data : {"singleWord" : singleWord},
+					success : function(result) {
+						if ( result.errcode==0 ) {
+							var list = result.data;							
+							var tableContent=draw(list);
+							$("#wordList").empty();
+							$("#wordList").html(tableContent);
+						} else {
+					        
+						}
+					}
+				})
+			}
+            function randomStart() {            	
+            	$.ajax({
+            		type : "GET",
+            		url  : "randomStart",
+            		data : "",            		
+            		success : function(result) {
+            			if ( result.errcode==0 ) {
+            				var list = result.data.list;
+            				var target = result.data.target;
+            				var tableContent=draw(list);
+							$("#wordList").empty();
+            				$("#wordList").html(tableContent);            				
+            			} else {
+                            
+            			}
+            		}
+            	});
+            }
+			function draw(list){
+				var content = "";
+				$.each(list, function(i, word){
+				    content += '<tr>';
+				    content += '  <td>'+(i+1)+'</td>';	          					
+				    content += '  <td>'+word.wordMeaning+'</td>';
+					content +='	  <td><input class="wordText form-control has-success" type="text" placeholder="" value=""></input></td>';
+				    content += '  <td class="wordOriginal" hidden="hidden" wordId="'+word.wordId+'">'+word.wordOriginal+'</td>';
+				    content += '  <td class="wordPronunciation" hidden="hidden">'+word.wordPronunciation+'</td>';
+				    content += '  <td>';
+					content +='       <button type="button" onclick="getWordAndRelation('+word.wordId+')" class="btn btn-success">跳转</button>';
+					content +='       <button type="button" onclick="updateWordByWordId('+word.wordId+')" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg">修改</button>';
+					content +='       <button type="button" onclick="deleteWordByWordId('+word.wordId+')" class="btn btn-danger">删除</button>';
+					content +='   </td>';
+				    content += '</tr>';
+				});
+				return content;
+			}
+			function getWordAndRelation(wordId){
+				$.ajax({
+					type : "GET",
+					url  : "getWordAndRelation",
+					data : {"wordId" : wordId},           		
+					success : function(result) {
+						if ( result.errcode==0 ) {
+							var list = result.data.list;
+							var target = result.data.target;
+							var tableContent=draw(list);
+							$("#wordList").empty();
+							$("#wordList").html(tableContent);            				
+						} else {
+				            
+						}
+					}
+				});
+			}
+			function deleteWordByWordId(wordId){
+				alert("现在不行");
+				/* $.ajax({
+					type : "GET",
+					url  : "deleteWordByWordId",
+					data : {"wordId" : wordId},           		
+					success : function(result) {
+						if ( result.errcode==0 ) {
+							alert("ok");
+							randomStart();
+						} else {
+				            alert("fail to delete this word");
+						}
+					}
+				}); */
+			}
+			function showWords(){
+				$(".wordOriginal").removeAttr("hidden");
+				$(".wordPronunciation").removeAttr("hidden");
+			}
+			function checkAndUpdateWordNum(){				
+				showWords();
+				var wordsArray=new Array();
+				$.each($("#wordList tr"), function(i, word){					
+					var wordOriginal=$($(word).find(".wordOriginal")).text();
+					var wordId=$($(word).find(".wordOriginal")).attr("wordId");
+					var wordText=$($(word).find(".wordText")).val();
+					var checkWord=new Object();
+					if(wordOriginal==wordText){						
+						checkWord.wordRightNum=1;
+						checkWord.wordMistakeNum=0;
+						checkWord.wordId=wordId;
+						wordsArray[i]=checkWord;
+					}else{
+						checkWord.wordRightNum=0;
+						checkWord.wordMistakeNum=1;
+						checkWord.wordId=wordId;
+						wordsArray[i]=checkWord;
+					}					
+				});
+				$.ajax({
+					type : "POST",
+					contentType: "application/json",
+					url  : "checkAndUpdateWordNum",					
+					data : JSON.stringify(wordsArray),
+					success : function(result) {
+						if ( result.errcode==0 ) {
+							alert("ok");
+						} else {
+				            alert("fail to checkAndUpdateWordNum");
+						}
+					}
+				});
+				randomStart();
+			}
+        </script>
+  </body>
+</html>

@@ -41,7 +41,7 @@ class LanguageApplicationTests {
     public void readTxt() throws IOException {
         wordDao.delete(null);
         chineseWordDao.delete(null);
-        File file = new File("C:\\Users\\Administrator\\Desktop\\初级上下.txt");
+        File file = new File("D:\\My Projects\\language\\src\\main\\resources\\data\\初级上下.txt");
         BufferedReader reader = new BufferedReader(new FileReader(file));
         String line;
         List<String> tempList = new ArrayList<>();
