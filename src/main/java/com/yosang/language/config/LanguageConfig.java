@@ -10,6 +10,7 @@ import com.yosang.language.pojo.Word;
 import com.yosang.language.utils.TimeUtils;
 
 import static com.yosang.language.enumunation.WORDTYPE.*;
+
 import java.util.*;
 
 
@@ -28,7 +29,8 @@ public class LanguageConfig {
 
             "が", "ぎ", "ぐ", "げ", "ご", "ざ", "じ", "ず", "ぜ", "ぞ",
             "だ", "ぢ", "づ", "で", "ど", "ば", "び", "ぶ", "べ", "ぼ",
-            "ぱ", "ぴ", "ぷ", "ぺ","ん","っ","ゃ","ょ","ッ","～"
+            "ぱ", "ぴ", "ぷ", "ぺ", "ん", "っ", "ゃ", "ょ", "ッ", "～",
+            "ぽ", "."
     };
 
     private static String[] katakana = {
@@ -40,7 +42,8 @@ public class LanguageConfig {
 
             "ガ", "ギ", "グ", "ゲ", "ゴ", "ザ", "ジ", "ズ", "ゼ", "ゾ",
             "ダ", "ヂ", "ヅ", "デ", "ド", "バ", "ビ", "ブ", "ベ", "ボ",
-            "パ", "ピ", "プ", "ペ","ァ","ー","ン","ポ","ェ","ィ"
+            "パ", "ピ", "プ", "ペ", "ァ", "ー", "ン", "ポ", "ェ", "ィ",
+            "ヨ", "ャ", "ユ"
     };
 
     private static List<String> hiraganaList = Arrays.asList(hiragana);
@@ -136,7 +139,7 @@ public class LanguageConfig {
         QueryWrapper<Word> con = new QueryWrapper<>();
         con.eq("WORD_ORIGINAL", wordOriginal);
         if (wordDao.selectOne(con) != null) {
-            throw new LanguageException("duplicate "+wordOriginal+" in database");
+            throw new LanguageException("duplicate " + wordOriginal + " in database");
         }
     }
 
@@ -154,23 +157,23 @@ public class LanguageConfig {
         }
     }
 
-    public static Map<String,Object> getWordAndRelation(Integer wordId,WordDao wordDao) {
-        List<Word> result=new ArrayList<>();
+    public static Map<String, Object> getWordAndRelation(Integer wordId, WordDao wordDao) {
+        List<Word> result = new ArrayList<>();
         Word word = wordDao.selectById(wordId);
         String chineseIds = word.getWordChineseIds();
-        if(chineseIds !=null){
+        if (chineseIds != null) {
             String[] ids = chineseIds.substring(1, chineseIds.length() - 1).split("\\|");
             for (String id : ids) {
-                QueryWrapper<Word> con=new QueryWrapper<>();
-                con.like("WORD_CHINESE_IDS","|"+id+"|")/*.notIn("WORD_ID",wordId)*/;
+                QueryWrapper<Word> con = new QueryWrapper<>();
+                con.like("WORD_CHINESE_IDS", "|" + id + "|")/*.notIn("WORD_ID",wordId)*/;
                 List<Word> words = wordDao.selectList(con);
                 result.addAll(words);
             }
         }
-        Map<String,Object> map=new HashMap<>();
-        map.put("size",result.size());
-        map.put("list",result);
-        map.put("target",word);
+        Map<String, Object> map = new HashMap<>();
+        map.put("size", result.size());
+        map.put("list", result);
+        map.put("target", word);
         return map;
     }
 }

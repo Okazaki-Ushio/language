@@ -31,14 +31,41 @@ class LanguageApplicationTests {
 
     @Test
     void contextLoads(){
-        String chineseIds="|7822|7857|7867|";
-        String substring = chineseIds.substring(1, chineseIds.length() - 2);
-        String[] ids = substring.split("\\|");
+        String word="ユニークだ";
+        WORDTYPE wordType = LanguageConfig.getWordType(word);
         System.out.println("ok");
     }
 
     @Test
-    public void readTxt() throws IOException {
+    public void readMiddleText() throws IOException {
+        File file = new File("D:\\project\\language\\src\\main\\resources\\data\\中级上下.txt");
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+        String line;
+        List<String> tempList = new ArrayList<>();
+        while ((line = reader.readLine()) != null) {
+            tempList.add(line);
+        }
+        String now = TimeUtils.now();
+        for (String temp : tempList) {
+            int bStart= !temp.contains("(") ?Integer.MAX_VALUE:temp.indexOf("(");
+            int mStart= !temp.contains("[") ?Integer.MAX_VALUE:temp.indexOf("[");
+            int wordEndIndex=bStart>mStart?mStart:bStart;
+            String originalWord=temp.substring(0,wordEndIndex);
+            String wordPronunciation="";
+            WORDTYPE wordType = LanguageConfig.getWordType(originalWord);
+            if(wordType==WORDTYPE.CHINESE||wordType==WORDTYPE.LOANWORD_CHINESE){
+                wordPronunciation=temp.substring(wordEndIndex+1,temp.indexOf(")"));
+            }
+            String wordMeaning=temp.substring(temp.lastIndexOf("]")>temp.lastIndexOf(")")
+                    ?temp.lastIndexOf("]")+1:temp.lastIndexOf(")")+1);
+            Word word=new Word();
+            word.setWordOriginal(originalWord).setWordPronunciation(wordPronunciation).setWordMeaning(wordMeaning);
+            wordService.addWord(word);
+        }
+    }
+
+    @Test
+    public void readJuniorText() throws IOException {
         wordDao.delete(null);
         chineseWordDao.delete(null);
         File file = new File("D:\\My Projects\\language\\src\\main\\resources\\data\\初级上下.txt");
@@ -81,7 +108,7 @@ class LanguageApplicationTests {
     }
 
     @Test
-    public void getText() throws IOException {
+    public void getJuniorText() throws IOException {
         File file = new File("C:\\Users\\Administrator\\Desktop\\练习打字.txt");
         BufferedReader reader = new BufferedReader(new FileReader(file));
         String line;
