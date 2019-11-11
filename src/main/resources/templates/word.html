@@ -52,7 +52,7 @@
 						<span><i class="glyphicon glyphicon glyphicon-tasks"></i> 单词管理 <span class="badge" style="float:right">2</span></span> 
 						<ul style="margin-top:10px;">
 							<li style="height:30px;">
-								<a href="word.html" style="color:red;"><i class="glyphicon glyphicon-user"></i> 单词列表</a>
+								<a href="/" style="color:red;"><i class="glyphicon glyphicon-user"></i> 单词列表</a>
 							</li>
 							<li style="height:30px;">
 								<a href="#"><i class="glyphicon glyphicon-king"></i> 统计查询</a> 
@@ -96,6 +96,7 @@
 </form>
 <button type="button" class="btn btn-primary" style="float:right;margin-left:10px;" onclick="checkAndUpdateWordNum()">提交</button>
 <button type="button" id="showWordsBtn" class="btn btn-info" style="float:right;margin-left:50px;" onclick="showWords()" value="">显示单词</button>
+<button type="button" id="showAllWordsBtn" class="btn btn-warning" style="float:right;margin-left:70px;" onclick="getAllWords()" value="">显示所有单词</button>
 <br>
  <hr style="clear:both;">
           <div class="table-responsive">
@@ -159,7 +160,8 @@
 	<!-- <script src="bootstrap/js/bootstrap-table.js"></script> -->
 
 	
-        <script type="text/javascript">			
+        <script type="text/javascript">
+			var PAHT="localhost";
             $(function () {
 			    $(".list-group-item").click(function(){
 				    if ( $(this).find("ul") ) {
@@ -223,7 +225,7 @@
 				    content += '  <td class="wordPronunciation" hidden="hidden">'+word.wordPronunciation+'</td>';
 				    content += '  <td>';
 					content +='       <button type="button" onclick="getWordAndRelation('+word.wordId+')" style="float:right;margin-right:10px;" class="btn btn-success">跳转</button>';
-					content +='       <button type="button" onclick="updateWordByWordId('+word.wordId+')" style="float:right;margin-right:10px;" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg">修改</button>';
+					content +='       <button type="button" onclick="updateWordByWordId('+word.wordId+')" style="float:right;margin-right:10px;" class="btn btn-primary" >修改</button>';
 					content +='       <button type="button" onclick="deleteWordByWordId('+word.wordId+')" style="float:right;margin-right:10px;" class="btn btn-danger">删除</button>';
 					content +='   </td>';
 				    content += '</tr>';
@@ -248,6 +250,23 @@
 					}
 				});
 			}
+			function getAllWords(){
+                $.ajax({
+                    type : "GET",
+                    url  : "getAllWords",
+                    data : "",
+                    success : function(result) {
+                        if ( result.errcode==0 ) {
+                            var list = result.data;
+                            var tableContent=draw(list);
+                            $("#wordList").empty();
+                            $("#wordList").html(tableContent);
+                        } else {
+
+                        }
+                    }
+                });
+			}
 			function deleteWordByWordId(wordId){
 				 $.ajax({
 					type : "GET",
@@ -263,6 +282,9 @@
 					}
 				});
 			}
+			function updateWordByWordId(wordId) {
+                window.location.href="/getWordByWordId?wordId="+wordId;
+            }
 			function showWords(){
 				if($("#showWordsBtn").text()=="显示单词"){
 					$(".wordOriginal").removeAttr("hidden");
