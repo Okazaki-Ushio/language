@@ -6,6 +6,7 @@ import com.yosang.language.pojo.Word;
 import com.yosang.language.service.WordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -68,16 +69,23 @@ public class WordController {
         return wordService.deleteWordByWordId(wordId);
     }
 
-    @NotNullProps({"wordId"})
     @ResponseBody
     @RequestMapping("updateWordByWordId")
+    @NotNullProps({"wordId","wordOriginal","wordMeaning"})
     public JSONObject updateWordByWordId(Word word){
         return wordService.updateWordByWordId(word);
     }
 
     @NotNullProps("wordId")
     @RequestMapping("getWordByWordId")
-    public JSONObject getWordByWordId(Integer wordId){
-        return wordService.getWordByWordId(wordId);
+    public String getWordByWordId(Integer wordId,Model model){
+        model.addAttribute("word",wordService.getWordByWordId(wordId));
+        return "editWord";
+    }
+
+    @ResponseBody
+    @RequestMapping("getAllWords")
+    public JSONObject getAllWords(){
+        return wordService.getAllWords();
     }
 }

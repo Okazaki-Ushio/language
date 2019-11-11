@@ -1,6 +1,7 @@
 package com.yosang.language.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.yosang.language.config.LanguageConfig;
 import com.yosang.language.dao.ChineseWordDao;
 import com.yosang.language.dao.WordDao;
@@ -117,18 +118,30 @@ public class WordServiceImpl implements WordService {
 
     @Override
     public JSONObject updateWordByWordId(Word word) {
-        word.setWordUpdateTime(TimeUtils.now());
-        int update = wordDao.updateById(word);
-        if(update==1){
-            return JsonUtils.success("");
+        QueryWrapper<Word> con=new QueryWrapper<>();
+        con.eq("wordOriginal",word.getWordOriginal());
+        Integer count = wordDao.selectCount(con);
+        if(count>=1){
+            return deleteWordByWordId(word.getWordId());
         }else {
-            return JsonUtils.fail(1001,"fail to update word");
+            word.setWordUpdateTime(TimeUtils.now());
+            int update = wordDao.updateById(word);
+            if(update==1){
+                return JsonUtils.success("");
+            }else {
+                return JsonUtils.fail(1001,"fail to update word");
+            }
         }
     }
 
     @Override
     public JSONObject getWordByWordId(Integer wordId) {
         return JsonUtils.success(wordDao.selectById(wordId));
+    }
+
+    @Override
+    public JSONObject getAllWords() {
+        return JsonUtils.success(wordDao.selectList(null));
     }
 
 

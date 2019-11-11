@@ -26,4 +26,6 @@ public interface WordService {
     JSONObject updateWordByWordId(Word word);
 
     JSONObject getWordByWordId(Integer wordId);
+
+    JSONObject getAllWords();
 }
