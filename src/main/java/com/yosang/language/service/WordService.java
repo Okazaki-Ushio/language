@@ -24,4 +24,6 @@ public interface WordService {
     JSONObject deleteWordByWordId(Integer wordId);
 
     JSONObject updateWordByWordId(Word word);
+
+    JSONObject getWordByWordId(Integer wordId);
 }

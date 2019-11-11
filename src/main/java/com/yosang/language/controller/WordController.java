@@ -74,4 +74,10 @@ public class WordController {
     public JSONObject updateWordByWordId(Word word){
         return wordService.updateWordByWordId(word);
     }
+
+    @NotNullProps("wordId")
+    @RequestMapping("getWordByWordId")
+    public JSONObject getWordByWordId(Integer wordId){
+        return wordService.getWordByWordId(wordId);
+    }
 }

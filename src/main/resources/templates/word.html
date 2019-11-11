@@ -118,7 +118,29 @@
 			<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
 			  <div class="modal-dialog modal-lg" role="document">
 				<div class="modal-content">
-				  ...
+
+					<form class="form-inline" role="form" style="float:left;">
+						<div class="form-group has-feedback">
+							<div class="input-group">
+								<div class="input-group-addon">单词拼写</div>
+								<input class="form-control has-success" type="text" placeholder="">
+							</div>
+						</div>
+						<div class="form-group has-feedback">
+							<div class="input-group">
+								<div class="input-group-addon">单词发音</div>
+								<input class="form-control has-success" type="text" placeholder="">
+							</div>
+						</div>
+						<div class="form-group has-feedback">
+							<div class="input-group">
+								<div class="input-group-addon">中文翻译</div>
+								<input class="form-control has-success" type="text" placeholder="">
+							</div>
+						</div>
+						<button type="button" class="btn btn-warning"><i class="glyphicon glyphicon-search"></i> 查询</button>
+					</form>
+
 				</div>
 			  </div>
 			</div>
@@ -227,14 +249,13 @@
 				});
 			}
 			function deleteWordByWordId(wordId){
-				alert("现在不行");
 				 $.ajax({
 					type : "GET",
 					url  : "deleteWordByWordId",
 					data : {"wordId" : wordId},           		
 					success : function(result) {
 						if ( result.errcode==0 ) {
-							alert("ok");
+							alert("删除了");
 							randomStart();
 						} else {
 				            alert("fail to delete this word");

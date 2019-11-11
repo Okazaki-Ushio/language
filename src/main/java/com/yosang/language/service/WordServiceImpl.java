@@ -126,5 +126,10 @@ public class WordServiceImpl implements WordService {
         }
     }
 
+    @Override
+    public JSONObject getWordByWordId(Integer wordId) {
+        return JsonUtils.success(wordDao.selectById(wordId));
+    }
+
 
 }
