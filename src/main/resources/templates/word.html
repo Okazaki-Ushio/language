@@ -10,7 +10,7 @@
 	<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
 	<link rel="stylesheet" href="css/font-awesome.min.css">
 	<link rel="stylesheet" href="css/main.css">
-	<link rel="stylesheet" href="toastr/toastr.min.css">
+
 	<!-- <link rel="stylesheet" href="bootstrap/css/fresh-bootstrap-table.css"/> -->
 	<style>
 	.tree li {
@@ -153,15 +153,16 @@
       </div>
     </div>
 
-	<script src="toastr/toastr.min.js"></script>
     <script src="jquery/jquery-2.1.1.min.js"></script>
     <script src="bootstrap/js/bootstrap.min.js"></script>
 	<script src="script/docs.min.js"></script>
+	<script src="layer/layer.js"></script>
 	<!-- <script src="bootstrap/js/bootstrap-table.js"></script> -->
 
 	
         <script type="text/javascript">
 			var PAHT="localhost";
+			var loadingIndex=null;
             $(function () {
 			    $(".list-group-item").click(function(){
 				    if ( $(this).find("ul") ) {
@@ -184,14 +185,20 @@
 					type : "GET",
 					url  : "getWordBySingleWord",
 					data : {"singleWord" : singleWord},
+                    beforeSend : function(){
+                        loadingIndex = layer.msg('处理中', {icon: 16});
+                    },
 					success : function(result) {
+                        layer.close(loadingIndex);
 						if ( result.errcode==0 ) {
 							var list = result.data;							
 							var tableContent=draw(list);
 							$("#wordList").empty();
 							$("#wordList").html(tableContent);
 						} else {
-					        
+                            layer.msg("search fail", {time:2000, icon:5, shift:6}, function(){
+
+                            });
 						}
 					}
 				})
@@ -200,7 +207,7 @@
             	$.ajax({
             		type : "GET",
             		url  : "randomStart",
-            		data : "",            		
+            		data : "",
             		success : function(result) {
             			if ( result.errcode==0 ) {
             				var list = result.data.list;
@@ -236,8 +243,12 @@
 				$.ajax({
 					type : "GET",
 					url  : "getWordAndRelation",
-					data : {"wordId" : wordId},           		
+					data : {"wordId" : wordId},
+                    beforeSend : function(){
+                        loadingIndex = layer.msg('处理中', {icon: 16});
+                    },
 					success : function(result) {
+                        layer.close(loadingIndex);
 						if ( result.errcode==0 ) {
 							var list = result.data.list;
 							var target = result.data.target;
@@ -245,7 +256,9 @@
 							$("#wordList").empty();
 							$("#wordList").html(tableContent);            				
 						} else {
-				            
+                            layer.msg("search fail", {time:2000, icon:5, shift:6}, function(){
+
+                            });
 						}
 					}
 				});
@@ -255,14 +268,20 @@
                     type : "GET",
                     url  : "getAllWords",
                     data : "",
+                    beforeSend : function(){
+                        loadingIndex = layer.msg('处理中', {icon: 16});
+                    },
                     success : function(result) {
+                        layer.close(loadingIndex);
                         if ( result.errcode==0 ) {
                             var list = result.data;
                             var tableContent=draw(list);
                             $("#wordList").empty();
                             $("#wordList").html(tableContent);
                         } else {
+                            layer.msg("search all fail", {time:2000, icon:5, shift:6}, function(){
 
+                            });
                         }
                     }
                 });
@@ -271,13 +290,20 @@
 				 $.ajax({
 					type : "GET",
 					url  : "deleteWordByWordId",
-					data : {"wordId" : wordId},           		
+					data : {"wordId" : wordId},
+					beforeSend : function(){
+						loadingIndex = layer.msg('处理中', {icon: 16});
+					},
 					success : function(result) {
+                        layer.close(loadingIndex);
 						if ( result.errcode==0 ) {
-							alert("删除了");
-							randomStart();
+                            layer.msg("delete ok", {time:1000, icon:6}, function(){
+                                randomStart();
+                            });
 						} else {
-				            alert("fail to delete this word");
+                            layer.msg("fail to delete this word", {time:2000, icon:5, shift:6}, function(){
+
+                            });
 						}
 					}
 				});
@@ -337,15 +363,23 @@
 					contentType: "application/json",
 					url  : "checkAndUpdateWordNum",					
 					data : JSON.stringify(wordsArray),
+                    beforeSend : function(){
+                        loadingIndex = layer.msg('处理中', {icon: 16});
+                    },
 					success : function(result) {
-						if ( result.errcode==0 ) {
-							alert("单词校验成功");
+                        layer.close(loadingIndex);
+                        if ( result.errcode==0 ) {
+                            layer.msg("word check ok", {time:1000, icon:6}, function(){
+                                randomStart();
+                            });
 						} else {
-							alert("单词校验失败");
+                            layer.msg("word check fail", {time:2000, icon:5, shift:6}, function(){
+
+                            });
 						}
 					}
 				});
-				randomStart();
+
 			}
         </script>
   </body>

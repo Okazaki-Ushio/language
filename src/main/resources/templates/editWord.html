@@ -117,6 +117,8 @@
 	<script src="jquery/jquery-2.1.1.min.js"></script>
 	<script src="bootstrap/js/bootstrap.min.js"></script>
 	<script src="script/docs.min.js"></script>
+    <script src="layer/layer.js"></script>
+
         <script type="text/javascript">
             $(function () {
 			    $(".list-group-item").click(function(){
@@ -144,12 +146,18 @@
                             "wordMeaning" : $("#wordMeaning").val(),
 			    			"wordId"        :  $("#wordId").val()
 			    		},
+                        beforeSend : function() {
+                            loadingIndex = layer.msg('on handler', {icon: 16});
+                        },
 			    		success : function(result) {
 			    			if ( result.errcode==0 ) {
-		                        alert("update the word ok~~");
-		                        window.location.href="/";
+                                layer.msg("update the word ok~~", {time:1000, icon:6}, function(){
+                                    window.location.href = "/";
+                                });
 			    			} else {
-                                alert("fail to update the word");
+                                layer.msg("fail to update the word", {time:2000, icon:5, shift:6}, function(){
+
+                                });
 			    			}
 			    		}
 			    	});
