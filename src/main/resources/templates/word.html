@@ -10,6 +10,7 @@
 	<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
 	<link rel="stylesheet" href="css/font-awesome.min.css">
 	<link rel="stylesheet" href="css/main.css">
+	<link rel="stylesheet" href="toastr/toastr.min.css">
 	<!-- <link rel="stylesheet" href="bootstrap/css/fresh-bootstrap-table.css"/> -->
 	<style>
 	.tree li {
@@ -128,8 +129,8 @@
         </div>
       </div>
     </div>
-	
 
+	<script src="toastr/toastr.min.js"></script>
     <script src="jquery/jquery-2.1.1.min.js"></script>
     <script src="bootstrap/js/bootstrap.min.js"></script>
 	<script src="script/docs.min.js"></script>
@@ -227,7 +228,7 @@
 			}
 			function deleteWordByWordId(wordId){
 				alert("现在不行");
-				/* $.ajax({
+				 $.ajax({
 					type : "GET",
 					url  : "deleteWordByWordId",
 					data : {"wordId" : wordId},           		
@@ -239,7 +240,7 @@
 				            alert("fail to delete this word");
 						}
 					}
-				}); */
+				});
 			}
 			function showWords(){
 				if($("#showWordsBtn").text()=="显示单词"){
@@ -267,8 +268,7 @@
 					});
 				}
 			}
-			function checkAndUpdateWordNum(){				
-				showWords();
+			function checkAndUpdateWordNum(){
 				var wordsArray=new Array();
 				$.each($("#wordList tr"), function(i, word){					
 					var wordOriginal=$($(word).find(".wordOriginal")).text();
@@ -296,9 +296,9 @@
 					data : JSON.stringify(wordsArray),
 					success : function(result) {
 						if ( result.errcode==0 ) {
-							alert("ok");
+							alert("单词校验成功");
 						} else {
-				            alert("fail to checkAndUpdateWordNum");
+							alert("单词校验失败");
 						}
 					}
 				});
