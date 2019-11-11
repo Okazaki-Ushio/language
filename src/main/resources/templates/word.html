@@ -94,7 +94,7 @@
   <button id="singleWordSearch" type="button" class="btn btn-warning"><i class="glyphicon glyphicon-search"></i> 查询</button>
 </form>
 <button type="button" class="btn btn-primary" style="float:right;margin-left:10px;" onclick="checkAndUpdateWordNum()">提交</button>
-<button type="button" class="btn btn-info" style="float:right;margin-left:50px;" onclick="showWords()">显示单词</button>
+<button type="button" id="showWordsBtn" class="btn btn-info" style="float:right;margin-left:50px;" onclick="showWords()" value="">显示单词</button>
 <br>
  <hr style="clear:both;">
           <div class="table-responsive">
@@ -199,9 +199,9 @@
 				    content += '  <td class="wordOriginal" hidden="hidden" wordId="'+word.wordId+'">'+word.wordOriginal+'</td>';
 				    content += '  <td class="wordPronunciation" hidden="hidden">'+word.wordPronunciation+'</td>';
 				    content += '  <td>';
-					content +='       <button type="button" onclick="getWordAndRelation('+word.wordId+')" class="btn btn-success">跳转</button>';
-					content +='       <button type="button" onclick="updateWordByWordId('+word.wordId+')" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg">修改</button>';
-					content +='       <button type="button" onclick="deleteWordByWordId('+word.wordId+')" class="btn btn-danger">删除</button>';
+					content +='       <button type="button" onclick="getWordAndRelation('+word.wordId+')" style="float:right;margin-right:10px;" class="btn btn-success">跳转</button>';
+					content +='       <button type="button" onclick="updateWordByWordId('+word.wordId+')" style="float:right;margin-right:10px;" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg">修改</button>';
+					content +='       <button type="button" onclick="deleteWordByWordId('+word.wordId+')" style="float:right;margin-right:10px;" class="btn btn-danger">删除</button>';
 					content +='   </td>';
 				    content += '</tr>';
 				});
@@ -242,8 +242,30 @@
 				}); */
 			}
 			function showWords(){
-				$(".wordOriginal").removeAttr("hidden");
-				$(".wordPronunciation").removeAttr("hidden");
+				if($("#showWordsBtn").text()=="显示单词"){
+					$(".wordOriginal").removeAttr("hidden");
+					$(".wordPronunciation").removeAttr("hidden");
+					$("#showWordsBtn").text("隐藏单词");
+					$.each($("#wordList tr"), function(i, word){
+						var wordOriginal=$($(word).find(".wordOriginal")).text();
+						var wordText=$($(word).find(".wordText")).val();
+						if(wordOriginal==wordText){
+							$($(word).find(".wordText")).removeAttr("style");
+							$($(word).find(".wordText")).css("border-color","fef9ff");
+						}else{
+							$($(word).find(".wordText")).removeAttr("style");
+							$($(word).find(".wordText")).css("border-color", "#ff0000");
+						}
+					});
+				}else {
+					$(".wordOriginal").attr("hidden","hidden");
+					$(".wordPronunciation").attr("hidden","hidden");
+					$("#showWordsBtn").text("显示单词");
+					$.each($("#wordList tr"), function(i, word){
+						$($(word).find(".wordText")).removeAttr("style");
+						$($(word).find(".wordText")).css("border-color","fef9ff");
+					});
+				}
 			}
 			function checkAndUpdateWordNum(){				
 				showWords();
@@ -258,11 +280,13 @@
 						checkWord.wordMistakeNum=0;
 						checkWord.wordId=wordId;
 						wordsArray[i]=checkWord;
+						$($(word).find(".wordText")).css("border-color","FEF9FF");
 					}else{
 						checkWord.wordRightNum=0;
 						checkWord.wordMistakeNum=1;
 						checkWord.wordId=wordId;
 						wordsArray[i]=checkWord;
+						$($(word).find(".wordText")).css("border-color", "#ff0000");
 					}					
 				});
 				$.ajax({
