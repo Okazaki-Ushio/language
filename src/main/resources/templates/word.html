@@ -308,7 +308,7 @@
                         layer.close(loadingIndex);
 						if ( result.errcode==0 ) {
                             layer.msg("delete ok", {time:1000, icon:6}, function(){
-                                randomStart();
+								getAllWords();
                             });
 						} else {
                             layer.msg("fail to delete this word", {time:2000, icon:5, shift:6}, function(){
