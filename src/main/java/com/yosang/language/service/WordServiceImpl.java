@@ -148,7 +148,7 @@ public class WordServiceImpl implements WordService {
     @Override
     public JSONObject updateWordByWordId(Word word) {
         QueryWrapper<Word> con=new QueryWrapper<>();
-        con.eq("wordOriginal",word.getWordOriginal());
+        con.eq("WORD_ORIGINAL",word.getWordOriginal());
         Integer count = wordDao.selectCount(con);
         if(count>=1){
             return deleteWordByWordId(word.getWordId());

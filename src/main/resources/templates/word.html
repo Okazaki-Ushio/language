@@ -159,7 +159,6 @@
 	<script src="layer/layer.js"></script>
 	<!-- <script src="bootstrap/js/bootstrap-table.js"></script> -->
 
-	
         <script type="text/javascript">
 			var PAHT="localhost";
 			var loadingIndex=null;
@@ -175,7 +174,7 @@
 					}
 				});
             });
-			randomStart();
+			getAllWords();
 			$("#singleWordSearch").click(function(){
 				var searchWord=$("#singleWord").val();
 				getWordBySingleWord(searchWord);
@@ -208,7 +207,11 @@
             		type : "GET",
             		url  : "randomStart",
             		data : "",
+					beforeSend : function(){
+						loadingIndex = layer.msg('处理中', {icon: 16});
+					},
             		success : function(result) {
+						layer.close(loadingIndex);
             			if ( result.errcode==0 ) {
             				var list = result.data.list;
             				var target = result.data.target;
@@ -216,7 +219,9 @@
 							$("#wordList").empty();
             				$("#wordList").html(tableContent);            				
             			} else {
-                            
+							layer.msg("search fail", {time:2000, icon:5, shift:6}, function(){
+
+							});
             			}
             		}
             	});
