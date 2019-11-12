@@ -92,8 +92,7 @@ class LanguageApplicationTests {
                 if(wordType==WORDTYPE.CHINESE||wordType==WORDTYPE.LOANWORD_CHINESE){
                     word.setWordPronunciation(pronunciation);
                 }
-                word.setWordType(wordType.getValue()).setWordCreateTime(now).setWordRightNum(0)
-                        .setWordMistakeNum(0).setWordOriginal(chineseWord).setWordMeaning(meaningIndex);
+                word.setWordType(wordType.getValue()).setWordOriginal(chineseWord).setWordMeaning(meaningIndex);
                 wordService.addWord(word);
             }else{
                 int start = !temp.contains("[") ?Integer.MAX_VALUE:temp.indexOf("[");
@@ -102,7 +101,6 @@ class LanguageApplicationTests {
                 String notChineseWord = temp.substring(0, start).trim();
                 Word word=new Word();
                 word.setWordType(LanguageConfig.getWordType(notChineseWord).getValue())
-                        .setWordCreateTime(now).setWordRightNum(0).setWordMistakeNum(0)
                         .setWordOriginal(notChineseWord).setWordMeaning(meaningIndex);
                 wordService.addWord(word);
             }

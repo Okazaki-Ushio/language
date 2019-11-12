@@ -44,7 +44,6 @@ public class WordServiceImpl implements WordService {
             switch (wordType){
                 case WAGO:
                 case LOANWORD:
-                    word.setWordPronunciation(wordOriginal);
                     insert = wordDao.insert(word);
                     break;
                 case CHINESE:

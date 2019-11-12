@@ -229,7 +229,12 @@
 				    content += '  <td>'+word.wordMeaning+'</td>';
 					content +='	  <td><input class="wordText form-control has-success" type="text" placeholder="" value=""></input></td>';
 				    content += '  <td class="wordOriginal" hidden="hidden" wordId="'+word.wordId+'">'+word.wordOriginal+'</td>';
-				    content += '  <td class="wordPronunciation" hidden="hidden">'+word.wordPronunciation+'</td>';
+				    if(word.wordPronunciation==null){
+						content += '  <td class="wordPronunciation" hidden="hidden"></td>';
+
+					}else {
+						content += '  <td class="wordPronunciation" hidden="hidden">'+word.wordPronunciation+'</td>';
+					}
 				    content += '  <td>';
 					content +='       <button type="button" onclick="getWordAndRelation('+word.wordId+')" style="float:right;margin-right:10px;" class="btn btn-success">跳转</button>';
 					content +='       <button type="button" onclick="updateWordByWordId('+word.wordId+')" style="float:right;margin-right:10px;" class="btn btn-primary" >修改</button>';
