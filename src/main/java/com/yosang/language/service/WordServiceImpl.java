@@ -1,6 +1,7 @@
 package com.yosang.language.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.yosang.language.config.LanguageConfig;
 import com.yosang.language.dao.ChineseWordDao;
@@ -101,9 +102,14 @@ public class WordServiceImpl implements WordService {
     }
 
     @Override
-    public JSONObject randomStart() {
-        Word word=wordDao.randomStart();
-        return getWordAndRelation(word.getWordId());
+    public JSONObject randomStart(Integer start) {
+        Word word=wordDao.randomStart(start);
+        WORDTYPE wordType = LanguageConfig.getWordType(word.getWordOriginal());
+        if(wordType==WORDTYPE.LOANWORD_CHINESE||wordType==WORDTYPE.CHINESE){
+            return getWordAndRelation(word.getWordId());
+        }else {
+            return randomStart(start+1);
+        }
     }
 
     @Override
@@ -170,7 +176,9 @@ public class WordServiceImpl implements WordService {
 
     @Override
     public JSONObject getAllWords() {
-        return JsonUtils.success(wordDao.selectList(null));
+        QueryWrapper<Word> con=new QueryWrapper<>();
+        con.orderByDesc("WORD_MISTAKE_NUM").orderByAsc("WORD_RIGHT_NUM");
+        return JsonUtils.success(wordDao.selectList(con));
     }
 
 

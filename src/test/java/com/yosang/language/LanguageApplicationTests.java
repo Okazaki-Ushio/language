@@ -36,7 +36,7 @@ class LanguageApplicationTests {
         System.out.println("ok");
     }
 
-    @Test
+    /*@Test
     public void readMiddleText() throws IOException {
         File file = new File("D:\\project\\language\\src\\main\\resources\\data\\中级上下.txt");
         BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -142,5 +142,5 @@ class LanguageApplicationTests {
         }
         writer.flush();
         writer.close();
-    }
+    }*/
 }

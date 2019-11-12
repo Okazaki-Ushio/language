@@ -174,7 +174,8 @@
 					}
 				});
             });
-			getAllWords();
+            randomStart();
+
 			$("#singleWordSearch").click(function(){
 				var searchWord=$("#singleWord").val();
 				getWordBySingleWord(searchWord);
@@ -232,7 +233,7 @@
 				    content += '<tr>';
 				    content += '  <td>'+(i+1)+'</td>';	          					
 				    content += '  <td>'+word.wordMeaning+'</td>';
-					content +='	  <td><input class="wordText form-control has-success" type="text" placeholder="" value=""></input></td>';
+					content +='	  <td><input class="wordText form-control has-success" wordOriginal="'+word.wordOriginal+'"onblur="checkWord($(this))" type="text" placeholder="" value=""></td>';
 				    content += '  <td class="wordOriginal" hidden="hidden" wordId="'+word.wordId+'">'+word.wordOriginal+'</td>';
 				    if(word.wordPronunciation==null){
 						content += '  <td class="wordPronunciation" hidden="hidden"></td>';
@@ -248,6 +249,20 @@
 				    content += '</tr>';
 				});
 				return content;
+			}
+			function checkWord(name) {
+				var wordText=name.val();
+				var wordOriginal=name.attr("wordOriginal");
+				/*var wordOriginal=$($(word).find(".wordOriginal")).text();
+				var wordText=$($(word).find(".wordText")).val();*/
+				if(wordOriginal==wordText){
+					name.removeAttr("style");
+					name.css("border-color","fef9ff");
+				}else{
+					name.removeAttr("style");
+					name.css("border-color", "#ff0000");
+				}
+
 			}
 			function getWordAndRelation(wordId){
 				$.ajax({
@@ -308,7 +323,7 @@
                         layer.close(loadingIndex);
 						if ( result.errcode==0 ) {
                             layer.msg("delete ok", {time:1000, icon:6}, function(){
-								getAllWords();
+                                randomStart();
                             });
 						} else {
                             layer.msg("fail to delete this word", {time:2000, icon:5, shift:6}, function(){
@@ -380,7 +395,7 @@
                         layer.close(loadingIndex);
                         if ( result.errcode==0 ) {
                             layer.msg("word check ok", {time:1000, icon:6}, function(){
-                                randomStart();
+
                             });
 						} else {
                             layer.msg("word check fail", {time:2000, icon:5, shift:6}, function(){
@@ -389,7 +404,6 @@
 						}
 					}
 				});
-
 			}
         </script>
   </body>
