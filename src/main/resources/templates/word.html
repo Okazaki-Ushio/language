@@ -233,7 +233,7 @@
 				    content += '<tr>';
 				    content += '  <td>'+(i+1)+'</td>';	          					
 				    content += '  <td>'+word.wordMeaning+'</td>';
-					content +='	  <td><input class="wordText form-control has-success" wordOriginal="'+word.wordOriginal+'"onblur="checkWord($(this))" type="text" placeholder="" value=""></td>';
+					content +='	  <td><input class="wordText form-control has-success" wordOriginal="'+word.wordOriginal+'"onblur="checkWord($(this))" onfocus="changeBorderColor($(this))" type="text" placeholder="" value=""></td>';
 				    content += '  <td class="wordOriginal" hidden="hidden" wordId="'+word.wordId+'">'+word.wordOriginal+'</td>';
 				    if(word.wordPronunciation==null){
 						content += '  <td class="wordPronunciation" hidden="hidden"></td>';
@@ -262,7 +262,10 @@
 					name.removeAttr("style");
 					name.css("border-color", "#ff0000");
 				}
-
+			}
+			function changeBorderColor(name) {
+				name.removeAttr("style");
+				name.css("border-color","fef9ff");
 			}
 			function getWordAndRelation(wordId){
 				$.ajax({
