@@ -7,6 +7,7 @@ import com.yosang.language.dao.ChineseWordDao;
 import com.yosang.language.dao.WordDao;
 import com.yosang.language.enumunation.WORDTYPE;
 import com.yosang.language.exception.LanguageException;
+import com.yosang.language.pojo.ChineseWord;
 import com.yosang.language.pojo.Word;
 import com.yosang.language.utils.JsonUtils;
 import com.yosang.language.utils.TimeUtils;
@@ -59,7 +60,7 @@ public class WordServiceImpl implements WordService {
         } catch (Exception e) {
             e.printStackTrace();
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            return JsonUtils.fail(1001, "添加单词失败");
+            return JsonUtils.fail(1001, "fail to add word");
         }
     }
 
@@ -72,7 +73,7 @@ public class WordServiceImpl implements WordService {
     @Override
     public JSONObject getWordBySingleWord(String singleWord) {
         if(singleWord.length()>1){
-            return JsonUtils.fail(1001,"不是单个汉字");
+            return JsonUtils.fail(1001,"its not single chinese word");
         }
         List<Word> words = LanguageConfig.getWordsBySingleWord(singleWord, chineseWordDao, wordDao);
         return JsonUtils.successList(words);
@@ -89,14 +90,14 @@ public class WordServiceImpl implements WordService {
                 selectWord.setWordRightNum(selectWord.getWordRightNum()+selectWord.getWordRightNum());
                 int update = wordDao.updateById(word);
                 if(update!=1){
-                    throw new Exception("fail to udpate word num");
+                    throw new Exception("fail to update word num");
                 }
             }
             return JsonUtils.success("");
         } catch (Exception e) {
             e.printStackTrace();
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            return JsonUtils.fail(1001, "更新单词统计失败");
+            return JsonUtils.fail(1001, "fail to update word num");
         }
     }
 
@@ -107,12 +108,41 @@ public class WordServiceImpl implements WordService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public JSONObject deleteWordByWordId(Integer wordId) {
-        int delete = wordDao.deleteById(wordId);
-        if(delete==1){
-            return JsonUtils.success("");
-        }else {
-            return JsonUtils.fail(1001,"fail to delete word");
+        try {
+            Word word = wordDao.selectById(wordId);
+            if(word.getWordType().equals(WORDTYPE.LOANWORD_CHINESE.getValue()) || word.getWordType().equals(WORDTYPE.CHINESE.getValue())){
+                clearChinese(word);
+            }
+            int delete = wordDao.deleteById(wordId);
+            if(delete==1){
+                return JsonUtils.success("");
+            }else {
+                return JsonUtils.fail(1001,"fail to delete word");
+            }
+        } catch (LanguageException e) {
+            e.printStackTrace();
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return JsonUtils.fail(1001, "fail to delete word by wordId");
+        }
+    }
+
+    private void clearChinese(Word word) throws LanguageException {
+        String[] chineseIds = word.getWordChineseIds().substring(1, word.getWordChineseIds().length() - 1).split("\\|");
+        for (String chineseId : chineseIds) {
+            ChineseWord chineseWord = chineseWordDao.selectById(chineseId);
+            int change;
+            if(chineseWord.getChineseWordLinkNum()==1){
+                change=chineseWordDao.deleteById(chineseId);
+            }else {
+                chineseWord.setChineseWordLinkNum(chineseWord.getChineseWordLinkNum()-1);
+                chineseWord.setChineseWordUpdateTime(TimeUtils.now());
+                change = chineseWordDao.updateById(chineseWord);
+            }
+            if(change<=0){
+                throw new LanguageException("fail to clear chinese word");
+            }
         }
     }
 

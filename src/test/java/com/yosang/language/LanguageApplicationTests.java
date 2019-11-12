@@ -68,7 +68,7 @@ class LanguageApplicationTests {
     public void readJuniorText() throws IOException {
         wordDao.delete(null);
         chineseWordDao.delete(null);
-        File file = new File("D:\\My Projects\\language\\src\\main\\resources\\data\\初级上下.txt");
+        File file = new File("D:\\project\\language\\src\\main\\resources\\data\\初级上下.txt");
         BufferedReader reader = new BufferedReader(new FileReader(file));
         String line;
         List<String> tempList = new ArrayList<>();
@@ -77,11 +77,10 @@ class LanguageApplicationTests {
         }
         String now = TimeUtils.now();
         for (String temp : tempList) {
-            int bEnd=temp.indexOf(")");
-            int mEnd=temp.indexOf("]");
-            int end=bEnd>mEnd?bEnd:mEnd;
-            String meaningIndex = temp.substring(end+1);
-
+            int bEnd=temp.lastIndexOf(")");
+            int mEnd=temp.lastIndexOf("]");
+            int meaningEndIndex=bEnd>mEnd?bEnd:mEnd;
+            String meaningIndex = temp.substring(meaningEndIndex+1);
             if(temp.contains("(")){
                 int start = temp.indexOf("(");
                 String chineseWord = temp.substring(start+1, temp.indexOf(")")).trim();
@@ -89,9 +88,12 @@ class LanguageApplicationTests {
                 start=tempIndex<start&&tempIndex!=-1?tempIndex:start;
                 String pronunciation = temp.substring(0, start);
                 Word word=new Word();
-                word.setWordPronunciation(pronunciation).setWordType(WORDTYPE.CHINESE.getValue())
-                        .setWordCreateTime(now).setWordRightNum(0).setWordMistakeNum(0)
-                        .setWordOriginal(chineseWord).setWordMeaning(meaningIndex);
+                WORDTYPE wordType = LanguageConfig.getWordType(chineseWord);
+                if(wordType==WORDTYPE.CHINESE||wordType==WORDTYPE.LOANWORD_CHINESE){
+                    word.setWordPronunciation(pronunciation);
+                }
+                word.setWordType(wordType.getValue()).setWordCreateTime(now).setWordRightNum(0)
+                        .setWordMistakeNum(0).setWordOriginal(chineseWord).setWordMeaning(meaningIndex);
                 wordService.addWord(word);
             }else{
                 int start = !temp.contains("[") ?Integer.MAX_VALUE:temp.indexOf("[");
@@ -99,7 +101,7 @@ class LanguageApplicationTests {
                 start=start<tempStart?start:tempStart;
                 String notChineseWord = temp.substring(0, start).trim();
                 Word word=new Word();
-                word.setWordPronunciation(notChineseWord).setWordType(LanguageConfig.getWordType(notChineseWord).getValue())
+                word.setWordType(LanguageConfig.getWordType(notChineseWord).getValue())
                         .setWordCreateTime(now).setWordRightNum(0).setWordMistakeNum(0)
                         .setWordOriginal(notChineseWord).setWordMeaning(meaningIndex);
                 wordService.addWord(word);
