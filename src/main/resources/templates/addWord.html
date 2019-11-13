@@ -86,24 +86,23 @@
 				  <li class="active">修改</li>
 				</ol>
 			<div class="panel panel-default">
-              <div class="panel-heading">单词修改<div style="float:right;cursor:pointer;" data-toggle="modal" data-target="#myModal"><i class="glyphicon glyphicon-question-sign"></i></div></div>
+              <div class="panel-heading">单词添加<div style="float:right;cursor:pointer;" data-toggle="modal" data-target="#myModal"><i class="glyphicon glyphicon-question-sign"></i></div></div>
 			  <div class="panel-body">
 				<form id="userForm" role="form">
 				  <div class="form-group">
 					<label>单词原型</label>
-					<input type="text" class="form-control" id="wordOriginal" th:value="${word.data.wordOriginal}">
-					<input type="hidden" class="form-control" id="wordId" th:value="${word.data.wordId}">
-					  <input type="hidden" class="form-control" id="wordSearch" th:value="${wordSearch}">
+					<input type="text" class="form-control" id="wordOriginal">
+					<input type="hidden" class="form-control" id="wordId">
 				  </div>
 				  <div class="form-group">
 					<label>单词发音</label>
-					<input type="text" class="form-control" id="wordPronunciation" th:value="${word.data.wordPronunciation}">
+					<input type="text" class="form-control" id="wordPronunciation">
 				  </div>
 				  <div class="form-group">
 					<label>单词中文</label>
-					<input type="email" class="form-control" id="wordMeaning"  th:value="${word.data.wordMeaning}">
+					<input type="email" class="form-control" id="wordMeaning">
 				  </div>
-				  <button id="updateBtn" type="button" class="btn btn-success"><i class="glyphicon glyphicon-pencil"></i> 修改</button>
+				  <button id="addBtn" type="button" class="btn btn-success"><i class="glyphicon glyphicon-pencil"></i> 添加</button>
 				  <button id="resetBtn" type="button" class="btn btn-danger"><i class="glyphicon glyphicon-refresh"></i> 重置</button>
 				</form>
 			  </div>
@@ -137,27 +136,25 @@
 			    	$("#userForm")[0].reset();
 			    });
 			    
-			    $("#updateBtn").click(function(){
+			    $("#addBtn").click(function(){
 			    	$.ajax({
 			    		type : "GET",
-			    		url  : "updateWordByWordId",
+			    		url  : "addWord",
 			    		data : {
 			    			"wordOriginal" : $("#wordOriginal").val(),
                             "wordPronunciation" : $("#wordPronunciation").val(),
                             "wordMeaning" : $("#wordMeaning").val(),
-			    			"wordId"        :  $("#wordId").val(),
-							"searchWord"        :  $("#searchWord").val()
 			    		},
                         beforeSend : function() {
                             loadingIndex = layer.msg('on handler', {icon: 16});
                         },
 			    		success : function(result) {
 			    			if ( result.errcode==0 ) {
-                                layer.msg("update the word ok~~", {time:1000, icon:6}, function(){
+                                layer.msg("add the word ok~~", {time:1000, icon:6}, function(){
                                     window.location.href = "/";
                                 });
 			    			} else {
-                                layer.msg("fail to update the word", {time:2000, icon:5, shift:6}, function(){
+                                layer.msg("fail to add the word", {time:2000, icon:5, shift:6}, function(){
 
                                 });
 			    			}

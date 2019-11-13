@@ -29,8 +29,14 @@ public class WordController {
         return "word";
     }
 
+
+    @RequestMapping({"gotoAddWordPage"})
+    public String gotoAddWordPage(){
+        return "addWord";
+    }
+
     @ResponseBody
-    @NotNullProps({"wordOriginal","wordPronunciation"})
+    @NotNullProps({"wordOriginal","wordPronunciation","wordMeaning"})
     @RequestMapping("addWord")
     public JSONObject addWord(Word word){
         return wordService.addWord(word);
@@ -72,14 +78,17 @@ public class WordController {
     @ResponseBody
     @RequestMapping("updateWordByWordId")
     @NotNullProps({"wordId","wordOriginal","wordMeaning"})
-    public JSONObject updateWordByWordId(Word word){
-        return wordService.updateWordByWordId(word);
+    public JSONObject updateWordByWordId(Word word,String searchWord){
+        JSONObject jsonObject = wordService.updateWordByWordId(word);
+        jsonObject.put("searchWord",searchWord);
+        return jsonObject;
     }
 
     @NotNullProps("wordId")
     @RequestMapping("getWordByWordId")
-    public String getWordByWordId(Integer wordId,Model model){
+    public String getWordByWordId(Integer wordId,String searchWord,Model model){
         model.addAttribute("word",wordService.getWordByWordId(wordId));
+        model.addAttribute("searchWord",searchWord);
         return "editWord";
     }
 
