@@ -158,7 +158,7 @@ public class WordServiceImpl implements WordService {
         QueryWrapper<Word> con=new QueryWrapper<>();
         con.eq("WORD_ORIGINAL",word.getWordOriginal());
         Integer count = wordDao.selectCount(con);
-        if(count>=1){
+        if(count>=2){
             return deleteWordByWordId(word.getWordId());
         }else {
             word.setWordUpdateTime(TimeUtils.now());

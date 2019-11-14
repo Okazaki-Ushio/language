@@ -62,9 +62,9 @@ class LanguageApplicationTests {
             word.setWordOriginal(originalWord).setWordPronunciation(wordPronunciation).setWordMeaning(wordMeaning);
             wordService.addWord(word);
         }
-    }
+    }*/
 
-    @Test
+    /*@Test
     public void readJuniorText() throws IOException {
         wordDao.delete(null);
         chineseWordDao.delete(null);
@@ -105,9 +105,9 @@ class LanguageApplicationTests {
                 wordService.addWord(word);
             }
         }
-    }
+    }*/
 
-    @Test
+    /*@Test
     public void getJuniorText() throws IOException {
         File file = new File("C:\\Users\\Administrator\\Desktop\\练习打字.txt");
         BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -128,7 +128,7 @@ class LanguageApplicationTests {
         writeFile("flatList",flatList);
         writeFile("kaList",kaList);
         System.out.println("ok");
-    }
+    }*/
 
     private void writeFile(String name, List<String> data) throws IOException {
         File flatFile = new File("C:\\Users\\Administrator\\Desktop\\"+name+".txt");
@@ -142,5 +142,5 @@ class LanguageApplicationTests {
         }
         writer.flush();
         writer.close();
-    }*/
+    }
 }
