@@ -5,6 +5,7 @@ import com.yosang.language.dao.ChineseWordDao;
 import com.yosang.language.dao.WordDao;
 import com.yosang.language.enumunation.WORDTYPE;
 import com.yosang.language.pojo.ChineseWord;
+import com.yosang.language.pojo.DuplicateWords;
 import com.yosang.language.pojo.Word;
 import com.yosang.language.service.WordService;
 import com.yosang.language.utils.TimeUtils;
@@ -30,11 +31,26 @@ class LanguageApplicationTests {
     private WordService wordService;
 
     @Test
-    void contextLoads(){
+    public void contextLoads(){
         String word="ユニークだ";
         WORDTYPE wordType = LanguageConfig.getWordType(word);
         System.out.println("ok");
     }
+
+    @Test
+    public void trimDuplicateWords(){
+        List<Word> words = wordDao.selectList(null);
+        List<DuplicateWords> result=new ArrayList<>();
+        for (int i = 0; i < words.size(); i++) {
+            for (int j = i+1; j < words.size(); j++) {
+                if(words.get(i).getWordOriginal().equals(words.get(j).getWordOriginal())){
+                    wordDao.deleteById(words.get(j).getWordId());
+                }
+            }
+        }
+        System.out.println("ok");
+    }
+
 
     /*@Test
     public void readMiddleText() throws IOException {

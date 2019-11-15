@@ -72,13 +72,19 @@ public class WordServiceImpl implements WordService {
 
     @Override
     public JSONObject getWordBySingleWord(String singleWord) {
-        if(singleWord.length()>1){
+        if(LanguageConfig.getWordType(singleWord)==WORDTYPE.CHINESE||LanguageConfig.getWordType(singleWord)==WORDTYPE.LOANWORD_CHINESE){
+            List<String> chineseWords = LanguageConfig.filterChineseWords(singleWord);
+            QueryWrapper<Word> wordCon=new QueryWrapper<>();
+            for (String chineseWord : chineseWords) {
+                wordCon.or().like("WORD_ORIGINAL",chineseWord);
+            }
+            List<Word> wordList = wordDao.selectList(wordCon);
+            return JsonUtils.success(wordList);
+        }else {
             QueryWrapper<Word> con=new QueryWrapper<>();
             con.like("WORD_ORIGINAL",singleWord);
             return JsonUtils.success(wordDao.selectList(con));
         }
-        List<Word> words = LanguageConfig.getWordsBySingleWord(singleWord, chineseWordDao, wordDao);
-        return JsonUtils.successList(words);
     }
 
     @Override
