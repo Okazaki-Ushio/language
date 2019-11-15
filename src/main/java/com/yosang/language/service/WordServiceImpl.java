@@ -38,7 +38,7 @@ public class WordServiceImpl implements WordService {
         try {
             int insert=0;
             String wordOriginal = word.getWordOriginal();
-            //LanguageConfig.filterDuplicateWord(wordOriginal,wordDao);
+            LanguageConfig.filterDuplicateWord(wordOriginal,wordDao);
             WORDTYPE wordType = LanguageConfig.getWordType(wordOriginal);
             word.setWordMistakeNum(0).setWordRightNum(0).setWordCreateTime(TimeUtils.now())
                     .setWordType(wordType.getValue());
