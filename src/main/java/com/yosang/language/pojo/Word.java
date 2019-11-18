@@ -25,4 +25,5 @@ public class Word {
     private String wordChineseIds; // |52|45|75|
     private String wordUpdateTime;
     private String wordMeaning;
+    private String wordProperty; //词性
 }

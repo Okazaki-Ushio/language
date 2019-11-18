@@ -1,5 +1,6 @@
 package com.yosang.language;
 
+import com.alibaba.fastjson.JSONObject;
 import com.yosang.language.config.LanguageConfig;
 import com.yosang.language.dao.ChineseWordDao;
 import com.yosang.language.dao.WordDao;
@@ -8,7 +9,9 @@ import com.yosang.language.pojo.ChineseWord;
 import com.yosang.language.pojo.DuplicateWords;
 import com.yosang.language.pojo.Word;
 import com.yosang.language.service.WordService;
+import com.yosang.language.utils.ExcelUtils;
 import com.yosang.language.utils.TimeUtils;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -51,6 +55,64 @@ class LanguageApplicationTests {
         System.out.println("ok");
     }
 
+    /*@Test
+    public void testTrimEnd(){
+        List<Word> result=new ArrayList<>();
+        List<Word> words = wordDao.selectList(null);
+        for (int i = 0; i < words.size(); i++) {
+            if(words.get(i).getWordOriginal().contains("ます")){
+                result.add(words.get(i));
+            }
+        }
+        for (Word word : result) {
+            System.out.println(word.getWordOriginal());
+        }
+        System.out.println("ok");
+    }*/
+
+    /*@Test
+    public void trimLikeWords(){
+        List<DuplicateWords> result=new ArrayList<>();
+        List<Word> words = wordDao.selectList(null);
+        for (int i = 0; i < words.size(); i++) {
+            for (int j = i+1; j < words.size(); j++) {
+                String wordOriginal = words.get(i).getWordOriginal();
+                String compareWord = words.get(j).getWordOriginal();
+                if(wordOriginal.endsWith("る")&&compareWord.endsWith("ます")){
+                    if(wordOriginal.substring(0,wordOriginal.length()-1).equals(compareWord.substring(0,compareWord.length()-2))){
+                        wordDao.deleteById(words.get(j).getWordId());
+                        //result.add(new DuplicateWords(words.get(i),words.get(j)));
+                    }
+                }else if(wordOriginal.endsWith("ます")&&compareWord.endsWith("る")){
+                    if(wordOriginal.substring(0,wordOriginal.length()-2).equals(compareWord.substring(0,compareWord.length()-1))){
+                        wordDao.deleteById(words.get(i).getWordId());
+                        //result.add(new DuplicateWords(words.get(i),words.get(j)));
+                    }
+                }
+            }
+        }
+        for (DuplicateWords duplicateWords : result) {
+            System.out.println(duplicateWords.getFirstWord().getWordOriginal()+"-"+duplicateWords.getSecondWord().getWordOriginal());
+        }
+        System.out.println("ok");
+    }*/
+
+    /*@Test
+    public void testPushExcel() throws IOException, InvalidFormatException {
+        File excel=new File("D:\\project\\language\\src\\main\\resources\\data\\日语1-4级词汇表.xls");
+        List<List<String>> lists = ExcelUtils.readExcel(excel,1);
+        for (int i = 1; i < lists.size(); i++) {
+            List<String> data = lists.get(i);
+            Word word=new Word();
+            word.setWordOriginal(data.get(0)).setWordMeaning(data.get(3)).setWordProperty(data.get(2));
+            WORDTYPE wordType = LanguageConfig.getWordType(data.get(0));
+            if(wordType==WORDTYPE.CHINESE||wordType==WORDTYPE.LOANWORD_CHINESE){
+                word.setWordPronunciation(data.get(1));
+            }
+            wordService.addWord(word);
+        }
+        System.out.println("ok");
+    }*/
 
     /*@Test
     public void readMiddleText() throws IOException {
