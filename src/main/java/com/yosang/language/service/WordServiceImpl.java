@@ -1,7 +1,6 @@
 package com.yosang.language.service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.yosang.language.config.LanguageConfig;
 import com.yosang.language.dao.ChineseWordDao;
