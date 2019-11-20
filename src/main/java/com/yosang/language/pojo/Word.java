@@ -18,7 +18,7 @@ public class Word {
     private Integer wordId;
     private String wordOriginal;
     private String wordPronunciation;
-    private Integer wordType; // 1和语 2汉语 3外来语
+    private Integer wordType; // 0异常 1和语 2汉语 3外来语 4外来语+汉语
     private Integer wordMistakeNum;
     private Integer wordRightNum;
     private String wordCreateTime;
@@ -26,4 +26,5 @@ public class Word {
     private String wordUpdateTime;
     private String wordMeaning;
     private String wordProperty; //词性
+    private Integer wordViewCount; //查看次数
 }

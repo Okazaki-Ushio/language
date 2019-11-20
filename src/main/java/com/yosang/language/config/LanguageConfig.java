@@ -170,10 +170,19 @@ public class LanguageConfig {
                 result.addAll(words);
             }
         }
+        updateListViewCount(result,wordDao);
         Map<String, Object> map = new HashMap<>();
         map.put("size", result.size());
         map.put("list", result);
         map.put("target", word);
         return map;
+    }
+
+    public static void updateListViewCount(List<Word> list, WordDao wordDao){
+        for (Word updateWord : list) {
+            updateWord.setWordViewCount(updateWord.getWordViewCount()+1);
+            updateWord.setWordUpdateTime(TimeUtils.now());
+            wordDao.updateById(updateWord);
+        }
     }
 }

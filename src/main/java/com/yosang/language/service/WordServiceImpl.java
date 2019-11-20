@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -41,7 +42,7 @@ public class WordServiceImpl implements WordService {
             LanguageConfig.filterDuplicateWord(wordOriginal,wordDao);
             WORDTYPE wordType = LanguageConfig.getWordType(wordOriginal);
             word.setWordMistakeNum(0).setWordRightNum(0).setWordCreateTime(TimeUtils.now())
-                    .setWordType(wordType.getValue());
+                    .setWordType(wordType.getValue()).setWordViewCount(0);
             switch (wordType){
                 case WAGO:
                 case LOANWORD:
@@ -72,19 +73,26 @@ public class WordServiceImpl implements WordService {
 
     @Override
     public JSONObject getWordBySingleWord(String singleWord) {
+        if(singleWord==null||singleWord.trim().equals("")){
+            JSONObject jsonObject = randomStart(1);
+            HashMap map = jsonObject.getObject("data", HashMap.class);
+            return JsonUtils.success(map.get("list"));
+        }
+        List<Word> wordList;
         if(LanguageConfig.getWordType(singleWord)==WORDTYPE.CHINESE||LanguageConfig.getWordType(singleWord)==WORDTYPE.LOANWORD_CHINESE){
             List<String> chineseWords = LanguageConfig.filterChineseWords(singleWord);
             QueryWrapper<Word> wordCon=new QueryWrapper<>();
             for (String chineseWord : chineseWords) {
                 wordCon.or().like("WORD_ORIGINAL",chineseWord);
             }
-            List<Word> wordList = wordDao.selectList(wordCon);
-            return JsonUtils.success(wordList);
+            wordList = wordDao.selectList(wordCon);
         }else {
             QueryWrapper<Word> con=new QueryWrapper<>();
             con.like("WORD_ORIGINAL",singleWord);
-            return JsonUtils.success(wordDao.selectList(con));
+            wordList = wordDao.selectList(con);
         }
+        LanguageConfig.updateListViewCount(wordList,wordDao);
+        return JsonUtils.success(wordList);
     }
 
     @Override
@@ -161,20 +169,11 @@ public class WordServiceImpl implements WordService {
 
     @Override
     public JSONObject updateWordByWordId(Word word) {
-        QueryWrapper<Word> con=new QueryWrapper<>();
-        con.eq("WORD_ORIGINAL",word.getWordOriginal());
-        Integer count = wordDao.selectCount(con);
-        if(count>=2){
-            return deleteWordByWordId(word.getWordId());
-        }else {
-            word.setWordUpdateTime(TimeUtils.now());
-            int update = wordDao.updateById(word);
-            if(update==1){
-                return JsonUtils.success("");
-            }else {
-                return JsonUtils.fail(1001,"fail to update word");
-            }
+        JSONObject deleteJson = deleteWordByWordId(word.getWordId());
+        if(deleteJson.getInteger("errcode")!=0){
+            return JsonUtils.fail(1001,"fail to delete original word");
         }
+        return addWord(word);
     }
 
     @Override

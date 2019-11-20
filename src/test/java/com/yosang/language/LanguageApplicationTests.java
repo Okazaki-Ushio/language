@@ -5,23 +5,21 @@ import com.yosang.language.config.LanguageConfig;
 import com.yosang.language.dao.ChineseWordDao;
 import com.yosang.language.dao.WordDao;
 import com.yosang.language.enumunation.WORDTYPE;
-import com.yosang.language.pojo.ChineseWord;
 import com.yosang.language.pojo.DuplicateWords;
 import com.yosang.language.pojo.Word;
 import com.yosang.language.service.WordService;
-import com.yosang.language.utils.ExcelUtils;
-import com.yosang.language.utils.TimeUtils;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -34,10 +32,11 @@ class LanguageApplicationTests {
     @Autowired
     private WordService wordService;
 
+
     @Test
     public void contextLoads(){
-        String word="ユニークだ";
-        WORDTYPE wordType = LanguageConfig.getWordType(word);
+
+        JSONObject jsonObject = wordService.randomStart(1);
         System.out.println("ok");
     }
 

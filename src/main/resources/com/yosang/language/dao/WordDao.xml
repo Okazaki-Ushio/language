@@ -5,7 +5,7 @@
 <mapper namespace="com.yosang.language.dao.WordDao">
 
     <select id="randomStart" resultType="com.yosang.language.pojo.Word" parameterType="java.lang.Integer">
-        select * from `language`.word ORDER BY (WORD_RIGHT_NUM+WORD_MISTAKE_NUM) ASC,WORD_MISTAKE_NUM DESC,
-        WORD_UPDATE_TIME ASC LIMIT #{start},1
+        select * from `language`.word WHERE WORD_VIEW_COUNT=(select min(WORD_VIEW_COUNT) FROM `language`.word where (WORD_TYPE=2 OR WORD_TYPE=4))
+        ORDER BY (WORD_RIGHT_NUM+WORD_MISTAKE_NUM) ASC,WORD_MISTAKE_NUM DESC,WORD_UPDATE_TIME ASC LIMIT #{start},1
     </select>
 </mapper>
