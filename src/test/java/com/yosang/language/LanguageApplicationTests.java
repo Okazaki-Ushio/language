@@ -8,18 +8,31 @@ import com.yosang.language.enumunation.WORDTYPE;
 import com.yosang.language.pojo.DuplicateWords;
 import com.yosang.language.pojo.Word;
 import com.yosang.language.service.WordService;
+import org.apache.http.Consts;
+import org.apache.http.HttpEntity;
+import org.apache.http.NameValuePair;
+import org.apache.http.ParseException;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import sun.net.www.http.HttpClient;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -32,15 +45,19 @@ class LanguageApplicationTests {
     @Autowired
     private WordService wordService;
 
+    private static final CloseableHttpClient httpclient = HttpClients.createDefault();
 
     @Test
-    public void contextLoads(){
+    public void contextLoads() throws IOException {
 
-        JSONObject jsonObject = wordService.randomStart(1);
-        System.out.println("ok");
+
     }
 
-    @Test
+
+
+
+
+    /*@Test
     public void trimDuplicateWords(){
         List<Word> words = wordDao.selectList(null);
         List<DuplicateWords> result=new ArrayList<>();
@@ -52,7 +69,7 @@ class LanguageApplicationTests {
             }
         }
         System.out.println("ok");
-    }
+    }*/
 
     /*@Test
     public void testTrimEnd(){

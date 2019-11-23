@@ -10,6 +10,7 @@
 	<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
 	<link rel="stylesheet" href="css/font-awesome.min.css">
 	<link rel="stylesheet" href="css/main.css">
+	<link rel="stylesheet" href="paging/paging.css">
 
 	<!-- <link rel="stylesheet" href="bootstrap/css/fresh-bootstrap-table.css"/> -->
 	<style>
@@ -97,7 +98,6 @@
 </form>
 <button type="button" class="btn btn-primary" style="float:right;margin-left:10px;" onclick="checkAndUpdateWordNum()">提交</button>
 <button type="button" id="showWordsBtn" class="btn btn-info" style="float:right;margin-left:50px;" onclick="showWords()" value="">显示单词</button>
-<button type="button" id="showAllWordsBtn" class="btn btn-warning" style="float:right;margin-left:70px;" onclick="getAllWords()" value="">显示所有单词</button>
 <br>
  <hr style="clear:both;">
           <div class="table-responsive">
@@ -114,9 +114,15 @@
               </thead>
               <tbody id="wordList">                
 				
-              </tbody>			  
+              </tbody>
+				<tfoot>
+				<div class="M-box"></div>
+				<div id="pageTool"></div>
+				<div id="pageToolbar"></div>
+				</tfoot>
             </table>
-			
+
+
 			<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
 			  <div class="modal-dialog modal-lg" role="document">
 				<div class="modal-content">
@@ -155,6 +161,10 @@
     </div>
 
     <script src="jquery/jquery-2.1.1.min.js"></script>
+	<!--<script src="paging/paging.js"></script>
+	<script src="paging/query.js"></script>
+	<script src="paging/require.js"></script>
+	<script src="paging/rpaging.js"></script>-->
     <script src="bootstrap/js/bootstrap.min.js"></script>
 	<script src="script/docs.min.js"></script>
 	<script src="layer/layer.js"></script>
@@ -175,7 +185,7 @@
 					}
 				});
             });
-            randomStart();
+			getWordsByWordType(1,10);
 			$("#singleWordSearch").click(function(){
 				var searchWord=$("#singleWord").val();
 				getWordBySingleWord(searchWord);
@@ -183,6 +193,30 @@
 			$("#addWord").click(function(){
 				window.location.href="/gotoAddWordPage";
 			});
+			function getWordsByWordType(current,size) {
+				$.ajax({
+					type : "GET",
+					url  : "getWordsByWordType",
+					data : {"wordType" : 1},
+					beforeSend : function(){
+						loadingIndex = layer.msg('处理中', {icon: 16});
+					},
+					success : function(result) {
+						layer.close(loadingIndex);
+						if ( result.errcode==0 ) {
+							var list = result.list;
+							var tableContent=draw(list);
+							$("#wordList").empty();
+							$("#wordList").html(tableContent);
+
+						} else {
+							layer.msg("search fail", {time:2000, icon:5, shift:6}, function(){
+
+							});
+						}
+					}
+				});
+			}
 
 			function getWordBySingleWord(singleWord){
 				$.ajax({
@@ -295,29 +329,6 @@
 						}
 					}
 				});
-			}
-			function getAllWords(){
-                $.ajax({
-                    type : "GET",
-                    url  : "getAllWords",
-                    data : "",
-                    beforeSend : function(){
-                        loadingIndex = layer.msg('处理中', {icon: 16});
-                    },
-                    success : function(result) {
-                        layer.close(loadingIndex);
-                        if ( result.errcode==0 ) {
-                            var list = result.data;
-                            var tableContent=draw(list);
-                            $("#wordList").empty();
-                            $("#wordList").html(tableContent);
-                        } else {
-                            layer.msg("search all fail", {time:2000, icon:5, shift:6}, function(){
-
-                            });
-                        }
-                    }
-                });
 			}
 			function deleteWordByWordId(wordId){
 				 $.ajax({

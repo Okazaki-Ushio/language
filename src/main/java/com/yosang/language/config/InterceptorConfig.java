@@ -12,7 +12,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new LanguageInterceptor()).addPathPatterns("/language/**");
+        registry.addInterceptor(new LanguageInterceptor()).addPathPatterns("/**");
         //registry.addInterceptor(new ActivityInterceptor()).addPathPatterns("/activity/**");
                 /*.excludePathPatterns("/xx/**")*/ //exclude the static resource
     }

@@ -1,6 +1,7 @@
 package com.yosang.language.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yosang.language.pojo.Word;
 
 import java.util.List;
@@ -28,4 +29,6 @@ public interface WordService {
     JSONObject getWordByWordId(Integer wordId);
 
     JSONObject getAllWords();
+
+    JSONObject getWordsByWordType(Page<Word> page, Word word);
 }

@@ -1,6 +1,7 @@
 package com.yosang.language.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yosang.language.annotation.NotNullProps;
 import com.yosang.language.pojo.Word;
 import com.yosang.language.service.WordService;
@@ -28,7 +29,6 @@ public class WordController {
     public String index(){
         return "word";
     }
-
 
     @RequestMapping({"gotoAddWordPage"})
     public String gotoAddWordPage(){
@@ -97,4 +97,17 @@ public class WordController {
     public JSONObject getAllWords(){
         return wordService.getAllWords();
     }
+    /*hiragana*/
+    @RequestMapping({"hiragana"})
+    public String hiragana(){
+        return "hiragana";
+    }
+
+    @NotNullProps({"wordType"})
+    @ResponseBody
+    @RequestMapping({"getWordsByWordType"})
+    public JSONObject getWordsByWordType(Word word,Page<Word> page){
+        return wordService.getWordsByWordType(page,word);
+    }
+
 }

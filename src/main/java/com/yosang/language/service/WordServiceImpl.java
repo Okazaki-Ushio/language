@@ -2,6 +2,8 @@ package com.yosang.language.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yosang.language.config.LanguageConfig;
 import com.yosang.language.dao.ChineseWordDao;
 import com.yosang.language.dao.WordDao;
@@ -185,6 +187,14 @@ public class WordServiceImpl implements WordService {
         QueryWrapper<Word> con=new QueryWrapper<>();
         con.orderByDesc("WORD_MISTAKE_NUM").orderByAsc("WORD_RIGHT_NUM");
         return JsonUtils.success(wordDao.selectList(con));
+    }
+
+    @Override
+    public JSONObject getWordsByWordType(Page<Word> page, Word word) {
+        QueryWrapper<Word> wordCon=new QueryWrapper<>();
+        wordCon.eq("WORD_TYPE",word.getWordType()).orderByDesc("WORD_VIEW_COUNT");
+        IPage<Word> wordIPage = wordDao.selectPage(page, wordCon);
+        return JsonUtils.successPage(wordIPage);
     }
 
 
