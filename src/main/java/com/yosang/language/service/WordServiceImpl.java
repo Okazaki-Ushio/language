@@ -193,7 +193,9 @@ public class WordServiceImpl implements WordService {
     public JSONObject getWordsByWordType(Page<Word> page, Word word) {
         QueryWrapper<Word> wordCon=new QueryWrapper<>();
         wordCon.eq("WORD_TYPE",word.getWordType()).orderByDesc("WORD_VIEW_COUNT");
+        page.setSize(Integer.MAX_VALUE);
         IPage<Word> wordIPage = wordDao.selectPage(page, wordCon);
+        LanguageConfig.updateListViewCount(wordIPage.getRecords(),wordDao);
         return JsonUtils.successPage(wordIPage);
     }
 

@@ -97,10 +97,15 @@ public class WordController {
     public JSONObject getAllWords(){
         return wordService.getAllWords();
     }
-    /*hiragana*/
+
     @RequestMapping({"hiragana"})
     public String hiragana(){
         return "hiragana";
+    }
+
+    @RequestMapping({"katakana"})
+    public String katakana(){
+        return "katakana";
     }
 
     @NotNullProps({"wordType"})

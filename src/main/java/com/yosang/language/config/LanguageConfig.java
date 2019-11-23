@@ -5,6 +5,7 @@ import com.yosang.language.dao.ChineseWordDao;
 import com.yosang.language.dao.WordDao;
 import com.yosang.language.enumunation.WORDTYPE;
 import com.yosang.language.exception.LanguageException;
+import com.yosang.language.forkjoin.UpdateWordsForkJoin;
 import com.yosang.language.pojo.ChineseWord;
 import com.yosang.language.pojo.Word;
 import com.yosang.language.utils.TimeUtils;
@@ -12,6 +13,7 @@ import com.yosang.language.utils.TimeUtils;
 import static com.yosang.language.enumunation.WORDTYPE.*;
 
 import java.util.*;
+import java.util.concurrent.ForkJoinPool;
 
 
 /**
@@ -182,7 +184,11 @@ public class LanguageConfig {
         for (Word updateWord : list) {
             updateWord.setWordViewCount(updateWord.getWordViewCount()+1);
             updateWord.setWordUpdateTime(TimeUtils.now());
-            wordDao.updateById(updateWord);
+            //wordDao.updateById(updateWord);
         }
+        //wordDao.updateBatch(list);
+        ForkJoinPool pool = new ForkJoinPool();
+        UpdateWordsForkJoin forkJoin=new UpdateWordsForkJoin(0,list.size(),list,wordDao);
+        pool.invoke(forkJoin);
     }
 }

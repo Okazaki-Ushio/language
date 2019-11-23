@@ -8,4 +8,11 @@
         select * from `language`.word WHERE WORD_VIEW_COUNT=(select min(WORD_VIEW_COUNT) FROM `language`.word where (WORD_TYPE=2 OR WORD_TYPE=4))
         ORDER BY (WORD_RIGHT_NUM+WORD_MISTAKE_NUM) ASC,WORD_MISTAKE_NUM DESC,WORD_UPDATE_TIME ASC LIMIT #{start},1
     </select>
+
+    <update id="updateBatch">
+        <foreach collection="list" item="word" index="index" open="" close="" separator=";">
+            UPDATE `language`.word set WORD_VIEW_COUNT=#{word.wordViewCount},WORD_UPDATE_TIME=#{word.wordUpdateTime}
+            WHERE WORD_ID=#{word.wordId}
+        </foreach>
+    </update>
 </mapper>

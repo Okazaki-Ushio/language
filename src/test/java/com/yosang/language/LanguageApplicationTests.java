@@ -1,13 +1,17 @@
 package com.yosang.language;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.yosang.language.config.LanguageConfig;
 import com.yosang.language.dao.ChineseWordDao;
 import com.yosang.language.dao.WordDao;
 import com.yosang.language.enumunation.WORDTYPE;
+import com.yosang.language.forkjoin.UpdateWordsForkJoin;
 import com.yosang.language.pojo.DuplicateWords;
 import com.yosang.language.pojo.Word;
 import com.yosang.language.service.WordService;
+import com.yosang.language.utils.TimeUtils;
 import org.apache.http.Consts;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
@@ -33,6 +37,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.*;
+import java.util.concurrent.ForkJoinPool;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -48,8 +53,19 @@ class LanguageApplicationTests {
     private static final CloseableHttpClient httpclient = HttpClients.createDefault();
 
     @Test
-    public void contextLoads() throws IOException {
-
+    public void contextLoads(){
+        QueryWrapper<Word> wordCon=new QueryWrapper<>();
+        wordCon.le("WORD_ID",25193);
+        List<Word> words = wordDao.selectList(null);
+        for (Word updateWord : words) {
+            updateWord.setWordViewCount(updateWord.getWordViewCount()+1);
+            updateWord.setWordUpdateTime(TimeUtils.now());
+        }
+        ForkJoinPool pool = new ForkJoinPool(10);
+        UpdateWordsForkJoin forkJoin=new UpdateWordsForkJoin(0,words.size(),words,wordDao);
+        long time = System.currentTimeMillis();
+        pool.invoke(forkJoin);
+        System.out.println("time:"+(System.currentTimeMillis()-time));
 
     }
 
