@@ -54,7 +54,7 @@ class LanguageApplicationTests {
 
     @Test
     public void contextLoads(){
-        QueryWrapper<Word> wordCon=new QueryWrapper<>();
+       /* QueryWrapper<Word> wordCon=new QueryWrapper<>();
         wordCon.le("WORD_ID",25193);
         List<Word> words = wordDao.selectList(null);
         for (Word updateWord : words) {
@@ -65,7 +65,7 @@ class LanguageApplicationTests {
         UpdateWordsForkJoin forkJoin=new UpdateWordsForkJoin(0,words.size(),words,wordDao);
         long time = System.currentTimeMillis();
         pool.invoke(forkJoin);
-        System.out.println("time:"+(System.currentTimeMillis()-time));
+        System.out.println("time:"+(System.currentTimeMillis()-time));*/
 
     }
 

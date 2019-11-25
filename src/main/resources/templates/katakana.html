@@ -53,7 +53,7 @@
 						<span><i class="glyphicon glyphicon glyphicon-tasks"></i> 单词管理 <span class="badge" style="float:right">3</span></span>
 						<ul style="margin-top:10px;">
 							<li style="height:30px;">
-								<a href="/" style="color:red;"><i class="glyphicon glyphicon-user"></i> 含中文单词</a>
+								<a href="/chinese" style="color:red;"><i class="glyphicon glyphicon-user"></i> 含中文单词</a>
 							</li>
 							<li style="height:30px;">
 								<a href="/hiragana"><i class="glyphicon glyphicon-king"></i> 平假名单词</a>
@@ -200,7 +200,7 @@
 				$.ajax({
 					type : "GET",
 					url  : "getWordsByWordType",
-					data : {"wordType" : 2},
+					data : {"wordType" : 3},
 					beforeSend : function(){
 						loadingIndex = layer.msg('处理中', {icon: 16});
 					},

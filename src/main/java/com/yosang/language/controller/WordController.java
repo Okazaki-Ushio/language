@@ -25,9 +25,9 @@ public class WordController {
     @Autowired
     private WordService wordService;
 
-    @RequestMapping({"/","word"})
+    @RequestMapping({"/","chinese"})
     public String index(){
-        return "word";
+        return "chinese";
     }
 
     @RequestMapping({"gotoAddWordPage"})

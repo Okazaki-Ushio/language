@@ -49,14 +49,17 @@
 						<a href="#"><i class="glyphicon glyphicon-dashboard"></i> 控制面板</a> 
 					</li>
 					<li class="list-group-item">
-						<span><i class="glyphicon glyphicon glyphicon-tasks"></i> 单词管理 <span class="badge" style="float:right">2</span></span> 
+						<span><i class="glyphicon glyphicon glyphicon-tasks"></i> 单词管理 <span class="badge" style="float:right">3</span></span>
 						<ul style="margin-top:10px;">
 							<li style="height:30px;">
-								<a href="/" style="color:red;"><i class="glyphicon glyphicon-user"></i> 含中文单词</a>
+								<a href="/chinese" style="color:red;"><i class="glyphicon glyphicon-user"></i> 含中文单词</a>
 							</li>
 							<li style="height:30px;">
 								<a href="/hiragana"><i class="glyphicon glyphicon-king"></i> 平假名单词</a>
-							</li>							
+							</li>
+                            <li style="height:30px;">
+                                <a href="/katakana"><i class="glyphicon glyphicon-king"></i> 片假名单词</a>
+                            </li>
 						</ul>
 					</li>
 					<li class="list-group-item tree-closed">
@@ -234,22 +237,22 @@
             }
 			function draw(list){
 				var content = "";
-				$.each(list, function(i, word){
+				$.each(list, function(i, chinese){
 				    content += '<tr>';
 				    content += '  <td>'+(i+1)+'</td>';	          					
-				    content += '  <td>'+word.wordMeaning+'</td>';
-					content +='	  <td><input class="wordText form-control has-success" wordOriginal="'+word.wordOriginal+'"onblur="checkWord($(this))" onfocus="changeBorderColor($(this))" type="text" placeholder="" value=""></td>';
-				    content += '  <td class="wordOriginal" hidden="hidden" wordId="'+word.wordId+'">'+word.wordOriginal+'</td>';
-				    if(word.wordPronunciation==null){
+				    content += '  <td>'+chinese.wordMeaning+'</td>';
+					content +='	  <td><input class="wordText form-control has-success" wordOriginal="'+chinese.wordOriginal+'"onblur="checkWord($(this))" onfocus="changeBorderColor($(this))" type="text" placeholder="" value=""></td>';
+				    content += '  <td class="wordOriginal" hidden="hidden" wordId="'+chinese.wordId+'">'+chinese.wordOriginal+'</td>';
+				    if(chinese.wordPronunciation==null){
 						content += '  <td class="wordPronunciation" hidden="hidden"></td>';
 
 					}else {
-						content += '  <td class="wordPronunciation" hidden="hidden">'+word.wordPronunciation+'</td>';
+						content += '  <td class="wordPronunciation" hidden="hidden">'+chinese.wordPronunciation+'</td>';
 					}
 				    content += '  <td>';
-					content +='       <button type="button" onclick="getWordAndRelation('+word.wordId+')" style="float:right;margin-right:10px;" class="btn btn-success">跳转</button>';
-					content +='       <button type="button" onclick="updateWordByWordId('+word.wordId+')" style="float:right;margin-right:10px;" class="btn btn-primary" >修改</button>';
-					content +='       <button type="button" onclick="deleteWordByWordId('+word.wordId+')" style="float:right;margin-right:10px;" class="btn btn-danger">删除</button>';
+					content +='       <button type="button" onclick="getWordAndRelation('+chinese.wordId+')" style="float:right;margin-right:10px;" class="btn btn-success">跳转</button>';
+					content +='       <button type="button" onclick="updateWordByWordId('+chinese.wordId+')" style="float:right;margin-right:10px;" class="btn btn-primary" >修改</button>';
+					content +='       <button type="button" onclick="deleteWordByWordId('+chinese.wordId+')" style="float:right;margin-right:10px;" class="btn btn-danger">删除</button>';
 					content +='   </td>';
 				    content += '</tr>';
 				});
@@ -350,14 +353,14 @@
 					$(".wordPronunciation").removeAttr("hidden");
 					$("#showWordsBtn").text("隐藏单词");
 					$.each($("#wordList tr"), function(i, word){
-						var wordOriginal=$($(word).find(".wordOriginal")).text();
-						var wordText=$($(word).find(".wordText")).val();
+						var wordOriginal=$($(chinese).find(".wordOriginal")).text();
+						var wordText=$($(chinese).find(".wordText")).val();
 						if(wordOriginal==wordText){
-							$($(word).find(".wordText")).removeAttr("style");
-							$($(word).find(".wordText")).css("border-color","fef9ff");
+							$($(chinese).find(".wordText")).removeAttr("style");
+							$($(chinese).find(".wordText")).css("border-color","fef9ff");
 						}else{
-							$($(word).find(".wordText")).removeAttr("style");
-							$($(word).find(".wordText")).css("border-color", "#ff0000");
+							$($(chinese).find(".wordText")).removeAttr("style");
+							$($(chinese).find(".wordText")).css("border-color", "#ff0000");
 						}
 					});
 				}else {
@@ -365,30 +368,30 @@
 					$(".wordPronunciation").attr("hidden","hidden");
 					$("#showWordsBtn").text("显示单词");
 					$.each($("#wordList tr"), function(i, word){
-						$($(word).find(".wordText")).removeAttr("style");
-						$($(word).find(".wordText")).css("border-color","fef9ff");
+						$($(chinese).find(".wordText")).removeAttr("style");
+						$($(chinese).find(".wordText")).css("border-color","fef9ff");
 					});
 				}
 			}
 			function checkAndUpdateWordNum(){
 				var wordsArray=new Array();
 				$.each($("#wordList tr"), function(i, word){					
-					var wordOriginal=$($(word).find(".wordOriginal")).text();
-					var wordId=$($(word).find(".wordOriginal")).attr("wordId");
-					var wordText=$($(word).find(".wordText")).val();
+					var wordOriginal=$($(chinese).find(".wordOriginal")).text();
+					var wordId=$($(chinese).find(".wordOriginal")).attr("wordId");
+					var wordText=$($(chinese).find(".wordText")).val();
 					var checkWord=new Object();
 					if(wordOriginal==wordText){						
 						checkWord.wordRightNum=1;
 						checkWord.wordMistakeNum=0;
 						checkWord.wordId=wordId;
 						wordsArray[i]=checkWord;
-						$($(word).find(".wordText")).css("border-color","FEF9FF");
+						$($(chinese).find(".wordText")).css("border-color","FEF9FF");
 					}else{
 						checkWord.wordRightNum=0;
 						checkWord.wordMistakeNum=1;
 						checkWord.wordId=wordId;
 						wordsArray[i]=checkWord;
-						$($(word).find(".wordText")).css("border-color", "#ff0000");
+						$($(chinese).find(".wordText")).css("border-color", "#ff0000");
 					}					
 				});
 				$.ajax({

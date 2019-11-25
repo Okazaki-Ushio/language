@@ -198,6 +198,4 @@ public class WordServiceImpl implements WordService {
         LanguageConfig.updateListViewCount(wordIPage.getRecords(),wordDao);
         return JsonUtils.successPage(wordIPage);
     }
-
-
 }
