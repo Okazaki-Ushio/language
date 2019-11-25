@@ -65,7 +65,7 @@ public class WordController {
     @ResponseBody
     @RequestMapping({"randomStart"})
     public JSONObject randomStart(){
-        return wordService.randomStart(1);
+        return wordService.randomStart(0);
     }
 
     @ResponseBody
