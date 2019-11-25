@@ -42,7 +42,7 @@ public class WordServiceImpl implements WordService {
             String wordOriginal = word.getWordOriginal();
             LanguageConfig.filterDuplicateWord(wordOriginal,wordDao);
             WORDTYPE wordType = LanguageConfig.getWordType(wordOriginal);
-            word.setWordMistakeNum(0).setWordRightNum(0).setWordCreateTime(TimeUtils.now())
+            word.setWordMistakeNum(0).setWordRightNum(0).setWordCreateTime(TimeUtils.nowSimpleDate())
                     .setWordType(wordType.getValue()).setWordViewCount(0);
             switch (wordType){
                 case WAGO:
@@ -101,7 +101,7 @@ public class WordServiceImpl implements WordService {
     public JSONObject checkAndUpdateWordNum(List<Word> words) {
         try {
             for (Word word : words) {
-                word.setWordUpdateTime(TimeUtils.now());
+                word.setWordUpdateTime(TimeUtils.nowSimpleDate());
                 Word selectWord = wordDao.selectById(word.getWordId());
                 selectWord.setWordMistakeNum(selectWord.getWordMistakeNum()+word.getWordMistakeNum());
                 selectWord.setWordRightNum(selectWord.getWordRightNum()+selectWord.getWordRightNum());
@@ -159,7 +159,7 @@ public class WordServiceImpl implements WordService {
                 change=chineseWordDao.deleteById(chineseId);
             }else {
                 chineseWord.setChineseWordLinkNum(chineseWord.getChineseWordLinkNum()-1);
-                chineseWord.setChineseWordUpdateTime(TimeUtils.now());
+                chineseWord.setChineseWordUpdateTime(TimeUtils.nowSimpleDate());
                 change = chineseWordDao.updateById(chineseWord);
             }
             if(change<=0){

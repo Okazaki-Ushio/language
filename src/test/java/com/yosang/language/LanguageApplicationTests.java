@@ -1,43 +1,23 @@
 package com.yosang.language;
 
-import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.yosang.language.config.LanguageConfig;
 import com.yosang.language.dao.ChineseWordDao;
 import com.yosang.language.dao.WordDao;
-import com.yosang.language.enumunation.WORDTYPE;
-import com.yosang.language.forkjoin.UpdateWordsForkJoin;
-import com.yosang.language.pojo.DuplicateWords;
-import com.yosang.language.pojo.Word;
 import com.yosang.language.service.WordService;
 import com.yosang.language.utils.TimeUtils;
-import org.apache.http.Consts;
-import org.apache.http.HttpEntity;
-import org.apache.http.NameValuePair;
-import org.apache.http.ParseException;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.EntityUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import sun.net.www.http.HttpClient;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.*;
-import java.util.concurrent.ForkJoinPool;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -53,13 +33,22 @@ class LanguageApplicationTests {
     private static final CloseableHttpClient httpclient = HttpClients.createDefault();
 
     @Test
-    public void contextLoads(){
+    public void contextLoads() {
+        String nowSimpleDate = TimeUtils.nowSimpleDate();
+        String nowTimeStamp = TimeUtils.nowTimeStamp();
+        String simpleDateByTimeStamp = TimeUtils.getSimpleDateByTimeStamp(nowTimeStamp);
+        String timeStampBySimpleDate = TimeUtils.getTimeStampBySimpleDate(nowSimpleDate);
+        LocalDateTime localDateTimeBySimpleDate = TimeUtils.getLocalDateTimeBySimpleDate(nowSimpleDate);
+        LocalDateTime localDateTimeByTimeStamp = TimeUtils.getLocalDateTimeByTimeStamp(nowTimeStamp);
+        boolean today1 = TimeUtils.isToday(localDateTimeBySimpleDate);
+        boolean today = TimeUtils.isToday(localDateTimeByTimeStamp);
+        System.out.println("ok");
        /* QueryWrapper<Word> wordCon=new QueryWrapper<>();
         wordCon.le("WORD_ID",25193);
         List<Word> words = wordDao.selectList(null);
         for (Word updateWord : words) {
             updateWord.setWordViewCount(updateWord.getWordViewCount()+1);
-            updateWord.setWordUpdateTime(TimeUtils.now());
+            updateWord.setWordUpdateTime(TimeUtils.nowSimpleDate());
         }
         ForkJoinPool pool = new ForkJoinPool(10);
         UpdateWordsForkJoin forkJoin=new UpdateWordsForkJoin(0,words.size(),words,wordDao);
@@ -155,7 +144,7 @@ class LanguageApplicationTests {
         while ((line = reader.readLine()) != null) {
             tempList.add(line);
         }
-        String now = TimeUtils.now();
+        String nowSimpleDate = TimeUtils.nowSimpleDate();
         for (String temp : tempList) {
             int bStart= !temp.contains("(") ?Integer.MAX_VALUE:temp.indexOf("(");
             int mStart= !temp.contains("[") ?Integer.MAX_VALUE:temp.indexOf("[");
@@ -185,7 +174,7 @@ class LanguageApplicationTests {
         while ((line = reader.readLine()) != null) {
             tempList.add(line);
         }
-        String now = TimeUtils.now();
+        String nowSimpleDate = TimeUtils.nowSimpleDate();
         for (String temp : tempList) {
             int bEnd=temp.lastIndexOf(")");
             int mEnd=temp.lastIndexOf("]");
@@ -241,12 +230,12 @@ class LanguageApplicationTests {
     }*/
 
     private void writeFile(String name, List<String> data) throws IOException {
-        File flatFile = new File("C:\\Users\\Administrator\\Desktop\\"+name+".txt");
-        BufferedWriter writer=new BufferedWriter(new FileWriter(flatFile));
-        int i=0;
+        File flatFile = new File("C:\\Users\\Administrator\\Desktop\\" + name + ".txt");
+        BufferedWriter writer = new BufferedWriter(new FileWriter(flatFile));
+        int i = 0;
         for (String flat : data) {
-            writer.write("\""+flat+"\",");
-            if(++i%10==0){
+            writer.write("\"" + flat + "\",");
+            if (++i % 10 == 0) {
                 writer.write("\n");
             }
         }

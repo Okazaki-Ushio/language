@@ -119,7 +119,7 @@ public class LanguageConfig {
     }
 
     public static Integer getChineseWordIdByWord(String singleWord, ChineseWordDao chineseWordDao) {
-        String time = TimeUtils.now();
+        String time = TimeUtils.nowSimpleDate();
         QueryWrapper<ChineseWord> con = new QueryWrapper<>();
         con.eq("CHINESE_WORD_ORIGINAL", singleWord);
         ChineseWord chineseWord = chineseWordDao.selectOne(con);
@@ -183,7 +183,7 @@ public class LanguageConfig {
     public static void updateListViewCount(List<Word> list, WordDao wordDao){
         for (Word updateWord : list) {
             updateWord.setWordViewCount(updateWord.getWordViewCount()+1);
-            updateWord.setWordUpdateTime(TimeUtils.now());
+            updateWord.setWordUpdateTime(TimeUtils.nowSimpleDate());
             //wordDao.updateById(updateWord);
         }
         //wordDao.updateBatch(list);
