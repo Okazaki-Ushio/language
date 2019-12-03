@@ -8,6 +8,7 @@ import com.yosang.language.service.WordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -25,9 +26,14 @@ public class WordController {
     @Autowired
     private WordService wordService;
 
-    @RequestMapping({"/","chinese"})
+    @RequestMapping({"/"})
     public String index(){
         return "chinese";
+    }
+
+    @RequestMapping("{page}")
+    public String page(@PathVariable String page){
+        return page;
     }
 
     @RequestMapping({"gotoAddWordPage"})
@@ -98,21 +104,10 @@ public class WordController {
         return wordService.getAllWords();
     }
 
-    @RequestMapping({"hiragana"})
-    public String hiragana(){
-        return "hiragana";
-    }
-
-    @RequestMapping({"katakana"})
-    public String katakana(){
-        return "katakana";
-    }
-
     @NotNullProps({"wordType"})
     @ResponseBody
     @RequestMapping({"getWordsByWordType"})
     public JSONObject getWordsByWordType(Word word,Page<Word> page){
         return wordService.getWordsByWordType(page,word);
     }
-
 }

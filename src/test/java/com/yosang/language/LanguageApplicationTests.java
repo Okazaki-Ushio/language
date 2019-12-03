@@ -34,7 +34,7 @@ class LanguageApplicationTests {
 
     @Test
     public void contextLoads() {
-        String nowSimpleDate = TimeUtils.nowSimpleDate();
+        /*String nowSimpleDate = TimeUtils.nowSimpleDate();
         String nowTimeStamp = TimeUtils.nowTimeStamp();
         String simpleDateByTimeStamp = TimeUtils.getSimpleDateByTimeStamp(nowTimeStamp);
         String timeStampBySimpleDate = TimeUtils.getTimeStampBySimpleDate(nowSimpleDate);
@@ -42,7 +42,7 @@ class LanguageApplicationTests {
         LocalDateTime localDateTimeByTimeStamp = TimeUtils.getLocalDateTimeByTimeStamp(nowTimeStamp);
         boolean today1 = TimeUtils.isToday(localDateTimeBySimpleDate);
         boolean today = TimeUtils.isToday(localDateTimeByTimeStamp);
-        System.out.println("ok");
+        System.out.println("ok");*/
        /* QueryWrapper<Word> wordCon=new QueryWrapper<>();
         wordCon.le("WORD_ID",25193);
         List<Word> words = wordDao.selectList(null);
