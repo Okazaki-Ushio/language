@@ -2,6 +2,8 @@ package com.yosang.language;
 
 import com.yosang.language.dao.ChineseWordDao;
 import com.yosang.language.dao.WordDao;
+import com.yosang.language.pojo.DuplicateWords;
+import com.yosang.language.pojo.Word;
 import com.yosang.language.service.WordService;
 import com.yosang.language.utils.TimeUtils;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -17,6 +19,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
@@ -241,5 +244,20 @@ class LanguageApplicationTests {
         }
         writer.flush();
         writer.close();
+    }
+
+    @Test
+    public void testDuplicateWords(){
+        List<DuplicateWords> result=new ArrayList<>();
+        List<Word> words = wordDao.selectList(null);
+        for (int i = 0; i < words.size(); i++) {
+            for (int j = i+1; j < words.size(); j++) {
+                if(words.get(i).getWordOriginal().equals(words.get(j).getWordOriginal())){
+                    DuplicateWords duplicateWords=new DuplicateWords(words.get(i),words.get(j));
+                    result.add(duplicateWords);
+                }
+            }
+        }
+        System.out.println("ok");
     }
 }

@@ -137,12 +137,10 @@ public class LanguageConfig {
         }
     }
 
-    public static void filterDuplicateWord(String wordOriginal, WordDao wordDao) throws LanguageException {
+    public static boolean filterDuplicateWord(String wordOriginal, WordDao wordDao){
         QueryWrapper<Word> con = new QueryWrapper<>();
         con.eq("WORD_ORIGINAL", wordOriginal);
-        if (wordDao.selectOne(con) != null) {
-            throw new LanguageException("duplicate " + wordOriginal + " in database");
-        }
+        return wordDao.selectOne(con) != null;
     }
 
     public static List<Word> getWordsBySingleWord(String singleWord, ChineseWordDao chineseWordDao, WordDao wordDao) {

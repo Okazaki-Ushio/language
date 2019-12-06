@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-
+	  <link rel="shortcut icon" href="#" />
 	<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
 	<link rel="stylesheet" href="css/font-awesome.min.css">
 	<link rel="stylesheet" href="css/main.css">
@@ -321,6 +321,22 @@
                         layer.close(loadingIndex);
 						if ( result.errcode==0 ) {
                             layer.msg("delete ok", {time:1000, icon:6}, function(){
+								if($("#showWordsBtn").text()=="显示单词"){
+									$(".wordOriginal").removeAttr("hidden");
+									$(".wordPronunciation").removeAttr("hidden");
+									$("#showWordsBtn").text("隐藏单词");
+									$.each($("#wordList tr"), function(i, word){
+										var wordOriginal=$($(chinese).find(".wordOriginal")).text();
+										var wordText=$($(chinese).find(".wordText")).val();
+										if(wordOriginal==wordText){
+											$($(chinese).find(".wordText")).removeAttr("style");
+											$($(chinese).find(".wordText")).css("border-color","fef9ff");
+										}else{
+											$($(chinese).find(".wordText")).removeAttr("style");
+											$($(chinese).find(".wordText")).css("border-color", "#ff0000");
+										}
+									});
+								}
                                 randomStart();
                             });
 						} else {

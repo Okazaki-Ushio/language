@@ -37,10 +37,17 @@ public class WordServiceImpl implements WordService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public JSONObject addWord(Word word) {
+        String wordOriginal = word.getWordOriginal();
+        boolean duplicateWord = LanguageConfig.filterDuplicateWord(wordOriginal, wordDao);
+        if(duplicateWord){
+            return JsonUtils.fail(1001,"duplicate word "+wordOriginal);
+        }
+        return doAddWord(word, wordOriginal);
+    }
+
+    private JSONObject doAddWord(Word word, String wordOriginal) {
         try {
             int insert=0;
-            String wordOriginal = word.getWordOriginal();
-            LanguageConfig.filterDuplicateWord(wordOriginal,wordDao);
             WORDTYPE wordType = LanguageConfig.getWordType(wordOriginal);
             word.setWordMistakeNum(0).setWordRightNum(0).setWordCreateTime(TimeUtils.nowSimpleDate())
                     .setWordType(wordType.getValue()).setWordViewCount(0);
@@ -169,12 +176,14 @@ public class WordServiceImpl implements WordService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public JSONObject updateWordByWordId(Word word) {
         JSONObject deleteJson = deleteWordByWordId(word.getWordId());
         if(deleteJson.getInteger("errcode")!=0){
             return JsonUtils.fail(1001,"fail to delete original word");
         }
         return addWord(word);
+
     }
 
     @Override
